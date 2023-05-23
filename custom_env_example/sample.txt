@@ -1,0 +1,2 @@
+cd custom_env_example/
+python hw.py
