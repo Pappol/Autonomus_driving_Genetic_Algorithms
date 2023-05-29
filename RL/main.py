@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 import time
 import torch
 import numpy as np
+import wandb
 from stable_baselines3 import DQN
 
 from matplotlib import animation
 
-NUMBER_EPISODES = 10000  # Basically number of epochs
+NUMBER_EPISODES = 1000  # Basically number of epochs
 TIMESTEPS = 100
 
 
@@ -58,6 +59,7 @@ def save_frames_as_gif(frames, path='./run/', filename='gym_animation.gif'):
 
 
 def learnDQNetwork():
+    wandb.init(project='Highway-DQN')
     config = {
         "observation": {
             "type": "TimeToCollision",
@@ -69,10 +71,10 @@ def learnDQNetwork():
         "duration": 40,  # [s]
         "lanes_count": 3,
         "initial_spacing": 2,
-        "collision_reward": -1,  # The reward received when colliding with a vehicle.
+        "collision_reward": -5,  # The reward received when colliding with a vehicle.
         "reward_speed_range": [20, 30]
     }
-    env = gym.make("highway-v0", render_mode='rgb_array')
+    env = gym.make("highway-fast-v0", render_mode='rgb_array')
     # Wrap the env by a RecordVideo wrapper
     """env = RecordVideo(env, video_folder="run",
                       episode_trigger=lambda e: True)  # record all episodes"""
@@ -81,31 +83,36 @@ def learnDQNetwork():
     # so it can send it intermediate simulation frames.
     # env.unwrapped.set_record_video_wrapper(env)
     env.configure(config)
-    agent = Agent(gamma=0.9, epsilon=1.0, batch_size=128, n_actions=5, eps_end=0.01, input_dims=90, lr=5e-4)
+    agent = Agent(gamma=0.9, epsilon=1.0, batch_size=128, n_actions=5, eps_end=0.01, input_dims=90, lr=5e-5)
     scores, epshistory = [], []
 
     for i in range(NUMBER_EPISODES):
         score = 0
         done = False
+        truncated=False
         frames = []
-        observation = env.reset()[0].flatten()
-        while not done:
+        observation = env.reset(seed=1)[0].flatten()
+        while (not done) and (not truncated):
             action = agent.choose_action(observation)
-            observation_, reward, done, _, info = env.step(action)
+            observation_, reward, done, truncated, info = env.step(action)
             observation_ = observation.flatten()
             score += reward
             agent.store_transition(state=observation, action=action, reward=reward, state_=observation_, done=done)
             agent.learn()
             observation = observation_
-            frames.append(env.render())
+            #frames.append(env.render())
         scores.append(score)
         epshistory.append(agent.epsilon)
         avg_score = np.mean(scores[-100:])
-        save_frames_as_gif(frames=frames, filename="episode" + str(i) + ".gif")
+        #save_frames_as_gif(frames=frames, filename="episode" + str(i) + ".gif")
 
         print('episode ', i,
               '\n\tscore=', score,
               '\n\tepsilon=', agent.epsilon)
+
+        wandb.log({"epidose":i,"score": score, "epsilon": agent.epsilon})
+
+    wandb.finish()
 
 
 # Press the green button in the gutter to run the script.
