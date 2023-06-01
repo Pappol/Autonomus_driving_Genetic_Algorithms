@@ -1,5 +1,4 @@
 import gymnasium as gym
-from model import Agent
 import highway_env
 import matplotlib.pyplot as plt
 import time
@@ -25,20 +24,26 @@ def eval_genomes(genomes, config):
         observation = env.reset(seed=10)[0].flatten()
         done = False
         fitness = 0.0
-        while not done:
+        # while not done:
+        #     action = net.activate(observation)
+        #     #argmax the function
+        #     action = np.argmax(action)
+        #     observation_, reward, done, _, info = env.step(action)
+        #     observation_ = observation.flatten()
+        #     fitness += reward
+        #     observation = observation_
+        terminated = truncated = False
+        while not (terminated or truncated):
             action = net.activate(observation)
-            #argmax the function
             action = np.argmax(action)
-            observation_, reward, done, _, info = env.step(action)
+            observation_, reward, terminated, truncated, info = env.step(action)
             observation_ = observation.flatten()
             fitness += reward
             observation = observation_
+
         genome.fitness = fitness
 
-def learnDQNetwork(env, config_path):
-    agent = Agent(gamma=0.99, epsilon=1.0, batch_size=128, n_actions=5, eps_end=0.01, input_dims=25, lr=5e-4)
-    scores, epshistory = [], []
-
+def learn(env, config_path):
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation,
                                 config_path)
@@ -47,8 +52,24 @@ def learnDQNetwork(env, config_path):
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
-    winner = p.run(eval_genomes, 50)
+    winner = p.run(eval_genomes, 30)
     print('\nBest genome:\n{!s}'.format(winner))
+
+    #test the best genome
+    winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
+    #show winner in action
+    observation = env.reset(seed=10)[0].flatten()
+    done = False
+    fitness = 0.0
+    while not done:
+        action = winner_net.activate(observation)
+        #argmax the function
+        action = np.argmax(action)
+        observation_, reward, done, _, info = env.step(action)
+        observation_ = observation.flatten()
+        fitness += reward
+        observation = observation_
+        env.render()
 
 
 
@@ -60,4 +81,4 @@ if __name__ == '__main__':
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-ff.txt')
 
-    learnDQNetwork(env, config_path)
+    learn(env, config_path)
