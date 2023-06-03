@@ -8,31 +8,76 @@ import pygad
 import statistics
 import wandb
 
+"""EXPECTED RESULT
+Based on the results we’ve observed above, we can come to the conclusion that
+genetic algorithms such as NeuroEvolution can speed up the initial phase of
+generalizing features several fold compared to traditional techniques such as
+back-propagation which place the prerequisite of procuring a massive dataset
+for training so as to not over-fit the solution. But once the network attains the
+basic cognitive abilities for driving, it can be further improved upon through
+reinforcement learning techniques such as Deep Q-learning, since it has already
+gathered a plethora of experiences over several generations, which is one of the
+key barriers slowing down reinforcement, since now we can quickly jump to the
+phase where the focus is more on obtaining as many rewards as possible rather
+than the initial phase of gathering experience where the agent primarily tries to
+just not get punished for its actions"""
+
 wandb.init(project='GA_highway')
 
 #PARAMETERS
-NUM_INDIVIDUALS=10
-NUM_GENERATIONS = 100  # Number of generations.
-NUM_PARENTS_MATING = 2  # Number of solutions to be selected as parents in the mating pool.
-PARENT_SELECTION_TYPE = "tournament"  # Type of parent selection.
-CROSSOVER_TYPE = "single_point"  # Type of the crossover operator.
-MUTATION_TYPE = "random"  # Type of the mutation operator.
-MUTATION_PERCENT_GENES = 10  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
-PARENTS_PERCENTAGE=0 #Percentage of parents to keep in the next population, goes from 0 to 1
+params={
+    "num_individuals" : 20,
+    "num_generations" : 100,  # Number of generations.
+    "num_parents_mating" : 2,  # Number of solutions to be selected as parents in the mating pool.
+    "parent_selection_type" : "tournament",  # Type of parent selection.
+    "crossover_type" : "single_point",  # Type of the crossover operator.
+    "mutation_type" : "random",  # Type of the mutation operator.
+    "mutation_percent_genes" : 5,  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
+    "parents_percentage":0, #Percentage of parents to keep in the next population, goes from 0 to 1
+}
+
+#Load parameters onto memory
+NUM_INDIVIDUALS=params['num_individuals']
+NUM_GENERATIONS = params['num_generations']  # Number of generations.
+NUM_PARENTS_MATING = params['num_parents_mating'] # Number of solutions to be selected as parents in the mating pool.
+PARENT_SELECTION_TYPE =params['parent_selection_type']  # Type of parent selection.
+CROSSOVER_TYPE = params['crossover_type']  # Type of the crossover operator.
+MUTATION_TYPE = params['mutation_type']  # Type of the mutation operator.
+MUTATION_PERCENT_GENES = params['mutation_percent_genes']  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
+PARENTS_PERCENTAGE= params['parents_percentage'] #Percentage of parents to keep in the next population, goes from 0 to 1
+
+gen_counter=0
 
 def list_envs():
     all_envs = gym.envs.registry
 
     print(sorted(all_envs))
 
+def convert_observation(observation_matrix):
+    """
+    Converts observation matrix from VxLxH to L array, where the array contains the depth of the closest collision
+    :param observation_matrix:
+    :return:
+    """
+    collision_vector=[]
+    for row in observation_matrix:
+        index = np.where(row == 1)[0]
+        if len(index) > 0:
+            collision_vector.append(index[0])
+        else:
+            collision_vector.append(-1)
+    return collision_vector
+
+
 def fitness_func(solution, sol_idx):
-    global keras_ga, model, observation_space_size, env
+    global keras_ga, model, observation_space_size, env,gen_counter
 
     model_weights_matrix = pygad.kerasga.model_weights_as_matrix(model=model, weights_vector=solution)
     model.set_weights(weights=model_weights_matrix)
 
     # play game
-    observation = env.reset()[0].flatten()
+    observation = env.reset(seed=gen_counter)[0]
+    observation = convert_observation(observation)
     sum_reward = 0
     done = False
     truncated=False
@@ -41,13 +86,13 @@ def fitness_func(solution, sol_idx):
         final_layer = model.predict(state,verbose=0)
         action = np.argmax(final_layer[0])
         observation_next, reward, done,truncated, info = env.step(action)
-        observation = observation_next.flatten()
+        observation = convert_observation(observation_next)
         sum_reward += reward
-
     return sum_reward
 
 
 def callback_generation(ga_instance):
+    global gen_counter
     generation_index=ga_instance.generations_completed
     print("Generation = {generation}".format(generation=generation_index))
     solutions_fitness = ga_instance.last_generation_fitness
@@ -58,7 +103,8 @@ def callback_generation(ga_instance):
     print("Median Fitness = {average}".format(average=median_solution))
     print("Worst Fitness = {worst}".format(worst=worst_solution))
     wandb.log({"Generation":generation_index,"Best Fitness": best_solution, "Median Fitness": median_solution,"Worst Fitness":worst_solution})
-    print("="*30)
+    gen_counter+=1
+    print("="*35)
 
 env = gym.make("highway-fast-v0", render_mode='rgb_array')
 config = {
@@ -70,16 +116,17 @@ config = {
             "type": "DiscreteMetaAction",
         },
         "duration": 40,  # [s]
-        "lanes_count": 3,
-        "normalize_reward": True
+        "collision_penalty":10,
+        "collision_reward":-10,
+        "vehicles_density": 1.5
     }
 env.configure(config)
-observation_space_size=len(env.reset()[0].flatten())
+observation_space_size=len(convert_observation(env.reset()[0]))
 action_space_size = env.action_space.n
 
 model = Sequential()
-model.add(Dense(64, input_shape=(observation_space_size,), activation='relu'))
-model.add(Dense(64, activation='relu'))
+model.add(Dense(32, input_shape=(observation_space_size,), activation='relu'))
+model.add(Dense(32, activation='relu'))
 model.add(Dense(action_space_size, activation='linear'))
 model.summary()
 
@@ -91,6 +138,10 @@ else:
     keep_parents = int(NUM_INDIVIDUALS*PARENTS_PERCENTAGE)  # Number of parents to keep in the next population. -1 means keep all parents and 0 means keep nothing.
 
 initial_population = keras_ga.population_weights  # Initial population of network weights
+print("GA settings:")
+print(params)
+print("Environment settings")
+print(config)
 ga_instance = pygad.GA(num_generations=NUM_GENERATIONS,
                        num_parents_mating=NUM_PARENTS_MATING,
                        initial_population=initial_population,
