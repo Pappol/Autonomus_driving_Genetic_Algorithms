@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+from numpy import dtype
+
 
 class DeepQNetwork(nn.Module):
     def __init__(self,lr,input_dims,fc1_dims,fc2_dims,n_actions):
@@ -12,9 +14,9 @@ class DeepQNetwork(nn.Module):
         self.fc2_dims=fc2_dims
         self.n_actions=n_actions
 
-        self.fc1=nn.Linear(self.input_dims,self.fc1_dims)
-        self.fc2=nn.Linear(self.fc1_dims,self.fc2_dims)
-        self.fc3=nn.Linear(self.fc2_dims,self.n_actions)
+        self.fc1=nn.Linear(self.input_dims,self.fc1_dims,dtype=torch.float)
+        self.fc2=nn.Linear(self.fc1_dims,self.fc2_dims,dtype=torch.float)
+        self.fc3=nn.Linear(self.fc2_dims,self.n_actions,dtype=torch.float)
 
         self.optimizer=optim.Adam(self.parameters(),lr=lr)
         self.loss=nn.MSELoss()
@@ -51,7 +53,7 @@ class Agent():
         self.batch_size=batch_size
         self.mem_ctr=0 #Counter for array of memory
 
-        self.Q_eval=DeepQNetwork(self.lr,n_actions=n_actions,input_dims=input_dims,fc1_dims=256,fc2_dims=256)
+        self.Q_eval=DeepQNetwork(self.lr,n_actions=n_actions,input_dims=input_dims,fc1_dims=64,fc2_dims=64)
 
         self.state_memory=np.zeros((self.mem_size,input_dims),dtype=np.float32)
         self.new_state_memory=np.zeros((self.mem_size,input_dims),dtype=np.float32) #Memory for next state
@@ -82,7 +84,7 @@ class Agent():
 
     def choose_action(self,observation):
         if np.random.random()>self.epsilon:
-            state= torch.tensor(observation).to(self.Q_eval.device)
+            state= torch.tensor(observation,dtype=torch.float).to(self.Q_eval.device)
             actions=self.Q_eval.forward(state)
             action=torch.argmax(actions).item() #Take action with highest activation output
         else:
