@@ -58,18 +58,32 @@ def save_frames_as_gif(frames, path='./run/', filename='gym_animation.gif'):
     anim = animation.FuncAnimation(plt.gcf(), animate, frames=len(frames), interval=50)
     anim.save(path + filename, writer='imagemagick', fps=60)
 
+def convert_observation(observation_matrix):
+    """
+    Converts observation matrix from VxLxH to L array, where the array contains the depth of the closest collision
+    :param observation_matrix:
+    :return:
+    """
+    collision_vector=[]
+    for row in observation_matrix[1]:
+        index = np.where(row > 0)[0]
+        if len(index) > 0:
+            collision_vector.append(index[0])
+        else:
+            collision_vector.append(len(row))
+    return collision_vector
 
 def showDemo(agent, env):
     for i in range(10):
         frames=[]
         score=0
-        observation = env.reset()[0].flatten()
+        observation = convert_observation(env.reset()[0])
         done = False
         truncated = False
         while (not done) and (not truncated):
             action = agent.choose_action(observation)
             observation_, reward, done, truncated, info = env.step(action)
-            observation_ = observation.flatten()
+            observation_ = convert_observation(observation_)
             score += reward
             agent.store_transition(state=observation, action=action, reward=reward, state_=observation_, done=done)
             agent.learn()
@@ -95,10 +109,9 @@ def learnDQNetwork():
             "type": "DiscreteMetaAction",
         },
         "duration": 40,  # [s]
-        "lanes_count": 3,
-        "initial_spacing": 2,
+        "lanes_count": 4,
         "collision_reward": -5,  # The reward received when colliding with a vehicle.
-        "reward_speed_range": [20, 30],
+        "reward_speed_range": [23, 30],
         "normalize_reward":False
     }
     env = gym.make("highway-fast-v0", render_mode='rgb_array')
@@ -110,7 +123,7 @@ def learnDQNetwork():
     # so it can send it intermediate simulation frames.
     # env.unwrapped.set_record_video_wrapper(env)
     env.configure(config)
-    agent = Agent(gamma=0.9, epsilon=1.0, batch_size=128, n_actions=5, eps_end=0.01, input_dims=90, lr=5e-5,eps_dec=3e-5)
+    agent = Agent(gamma=0.9, epsilon=1.0, batch_size=128, n_actions=5, eps_end=0.01, input_dims=3, lr=5e-5,eps_dec=3e-5)
     scores, epshistory = [], []
     best_score=0
     best_agent=None
@@ -120,16 +133,16 @@ def learnDQNetwork():
         done = False
         truncated=False
         frames = []
-        observation = env.reset()[0].flatten()
+        observation = convert_observation(env.reset()[0])
         while (not done) and (not truncated):
             action = agent.choose_action(observation)
             observation_, reward, done, truncated, info = env.step(action)
-            observation_ = observation.flatten()
+            observation_ = convert_observation(observation_)
             score += reward
             agent.store_transition(state=observation, action=action, reward=reward, state_=observation_, done=done)
             agent.learn()
             observation = observation_
-            frames.append(env.render())
+            #frames.append(env.render())
         scores.append(score)
         epshistory.append(agent.epsilon)
         #avg_score = np.mean(scores[-100:])
