@@ -2,11 +2,15 @@ import gymnasium as gym
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-import math
+import matplotlib.pyplot as plt
+from matplotlib import animation
 import pygad.kerasga
 import pygad
 import statistics
 import wandb
+import random
+
+#NOTE: used pygad version 2.19.2
 
 """EXPECTED RESULT
 Based on the results we’ve observed above, we can come to the conclusion that
@@ -26,13 +30,13 @@ wandb.init(project='GA_highway')
 
 #PARAMETERS
 params={
-    "num_individuals" : 20,
+    "num_individuals" : 10,
     "num_generations" : 100,  # Number of generations.
     "num_parents_mating" : 2,  # Number of solutions to be selected as parents in the mating pool.
-    "parent_selection_type" : "tournament",  # Type of parent selection.
+    "parent_selection_type" : "rank",  # Type of parent selection.
     "crossover_type" : "single_point",  # Type of the crossover operator.
-    "mutation_type" : "random",  # Type of the mutation operator.
-    "mutation_percent_genes" : 5,  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
+    "mutation_type" : "adaptive",  # Type of the mutation operator.
+    "mutation_probability" : (0.5,0.1),  #Probability of modifying a gene, if adaptive is selected, its a tuple of 2 values with probability of mutation of bad solution and good solution
     "parents_percentage":0, #Percentage of parents to keep in the next population, goes from 0 to 1
 }
 
@@ -43,7 +47,7 @@ NUM_PARENTS_MATING = params['num_parents_mating'] # Number of solutions to be se
 PARENT_SELECTION_TYPE =params['parent_selection_type']  # Type of parent selection.
 CROSSOVER_TYPE = params['crossover_type']  # Type of the crossover operator.
 MUTATION_TYPE = params['mutation_type']  # Type of the mutation operator.
-MUTATION_PERCENT_GENES = params['mutation_percent_genes']  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
+MUTATION_PROBABILITY = params['mutation_probability']  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
 PARENTS_PERCENTAGE= params['parents_percentage'] #Percentage of parents to keep in the next population, goes from 0 to 1
 
 gen_counter=0
@@ -60,8 +64,8 @@ def convert_observation(observation_matrix):
     :return:
     """
     collision_vector=[]
-    for row in observation_matrix:
-        index = np.where(row == 1)[0]
+    for row in observation_matrix[1]:
+        index = np.where(row > 0)[0]
         if len(index) > 0:
             collision_vector.append(index[0])
         else:
@@ -90,6 +94,42 @@ def fitness_func(solution, sol_idx):
         sum_reward += reward
     return sum_reward
 
+def save_frames_as_gif(frames, path='./run/', filename='gym_animation.gif'):
+    # Mess with this to change frame size
+    plt.figure(figsize=(frames[0].shape[1] / 72.0, frames[0].shape[0] / 72.0), dpi=72)
+
+    patch = plt.imshow(frames[0])
+    plt.axis('off')
+
+    def animate(i):
+        patch.set_data(frames[i])
+
+    anim = animation.FuncAnimation(plt.gcf(), animate, frames=len(frames), interval=50)
+    anim.save(path + filename, writer='imagemagick', fps=60)
+def testDemo(model, env):
+    for i in range(10):
+        frames=[]
+        score=0
+        observation = convert_observation(env.reset()[0])
+        done = False
+        truncated = False
+        while (not done) and (not truncated):
+            state = np.reshape(observation, [1, observation_space_size])
+            final_layer = model.predict(state, verbose=0)
+            action = np.argmax(final_layer[0])
+            observation_, reward, done, truncated, info = env.step(action)
+            observation_ = convert_observation(observation_)
+            frames.append(env.render())
+        save_frames_as_gif(frames=frames, filename=str(i)+"_best_agent_visualized_.gif")
+
+def mutation_func(offspring, ga_instance):
+    mean=0
+    std=5
+    for new_gen_individual in range(offspring.shape[0]):
+        for gene_index in range(offspring.shape[1]):
+            if(random.uniform(0, 100)<=ga_instance.mutation_percent_genes):
+                offspring[new_gen_individual,gene_index]=offspring[new_gen_individual,gene_index] + np.random.normal(mean, std)
+    return offspring
 
 def callback_generation(ga_instance):
     global gen_counter
@@ -116,17 +156,18 @@ config = {
             "type": "DiscreteMetaAction",
         },
         "duration": 40,  # [s]
-        "collision_penalty":10,
-        "collision_reward":-10,
-        "vehicles_density": 1.5
+        "lanes_count": 4,
+        "collision_reward":-5,
+        "reward_speed_range": [23, 30],
+        "normalize_reward": False
     }
 env.configure(config)
 observation_space_size=len(convert_observation(env.reset()[0]))
 action_space_size = env.action_space.n
 
 model = Sequential()
-model.add(Dense(32, input_shape=(observation_space_size,), activation='relu'))
-model.add(Dense(32, activation='relu'))
+model.add(Dense(16, input_shape=(observation_space_size,), activation='tanh'))
+model.add(Dense(8, activation='tanh'))
 model.add(Dense(action_space_size, activation='linear'))
 model.summary()
 
@@ -142,6 +183,7 @@ print("GA settings:")
 print(params)
 print("Environment settings")
 print(config)
+print("Input type:",observation_space_size)
 ga_instance = pygad.GA(num_generations=NUM_GENERATIONS,
                        num_parents_mating=NUM_PARENTS_MATING,
                        initial_population=initial_population,
@@ -149,11 +191,24 @@ ga_instance = pygad.GA(num_generations=NUM_GENERATIONS,
                        parent_selection_type=PARENT_SELECTION_TYPE,
                        crossover_type=CROSSOVER_TYPE,
                        mutation_type=MUTATION_TYPE,
-                       mutation_percent_genes=MUTATION_PERCENT_GENES,
+                       mutation_probability=MUTATION_PROBABILITY,
                        keep_parents=keep_parents,
                        keep_elitism=0,
                        on_generation=callback_generation,
                        save_solutions=False)
+
+"""ga_instance = pygad.GA(num_generations=NUM_GENERATIONS,
+                       num_parents_mating=NUM_PARENTS_MATING,
+                       initial_population=initial_population,
+                       fitness_func=fitness_func,
+                       parent_selection_type=PARENT_SELECTION_TYPE,
+                       crossover_type=CROSSOVER_TYPE,
+                       mutation_type=mutation_func,
+                       mutation_percent_genes=MUTATION_PERCENT_GENES,
+                       keep_parents=keep_parents,
+                       keep_elitism=0,
+                       on_generation=callback_generation,
+                       save_solutions=False)"""
 
 ga_instance.run()
 
@@ -168,4 +223,5 @@ print("Index of the best solution : {solution_idx}".format(solution_idx=solution
 
 model_weights_matrix = pygad.kerasga.model_weights_as_matrix(model=model, weights_vector=solution)
 model.set_weights(weights=model_weights_matrix)
+
 model.save("highway_weights")
