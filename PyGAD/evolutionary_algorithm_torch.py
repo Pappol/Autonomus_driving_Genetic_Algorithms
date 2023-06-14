@@ -1,10 +1,8 @@
 import gymnasium as gym
 import numpy as np
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+import torch
 import matplotlib.pyplot as plt
 from matplotlib import animation
-import pygad.kerasga
 import pygad.torchga
 import pygad
 import statistics
@@ -26,21 +24,23 @@ key barriers slowing down reinforcement, since now we can quickly jump to the
 phase where the focus is more on obtaining as many rewards as possible rather
 than the initial phase of gathering experience where the agent primarily tries to
 just not get punished for its actions"""
+device=0
 
 wandb.init(project='GA_highway')
 
 #PARAMETERS
 params={
-    "num_individuals" : 25,
+    "num_individuals" : 50,
     "num_generations" : 100,  # Number of generations.
-    "num_parents_mating" : 4,  # Number of solutions to be selected as parents in the mating pool.
+    "num_parents_mating" : 5,  # Number of solutions to be selected as parents in the mating pool.
     "parent_selection_type" : "rank",  # Type of parent selection.
     "crossover_type" : "single_point",  # Type of the crossover operator.
     "mutation_type" : "random",  # Type of the mutation operator.
     "mutation_probability" : 0.1,
     #"mutation_probability" : (0.35,0.05),  #Probability of modifying a gene, if adaptive is selected, its a tuple of 2 values with probability of mutation of bad solution and good solution
-    "parents_percentage":0, #Percentage of parents to keep in the next population, goes from 0 to 1
-    "evaluation_scenarios": 2
+    #"parents_percentage":0.1, #Percentage of parents to keep in the next population, goes from 0 to 1
+    "simulation_type": "population_seed", #Choose from [evolution_seed,population_seed,individual_seed] Evolution means a single seed is used for the whole process, population seed means all individuals in the same population share the same environment, individual means every environoment is different,
+    "evaluation_scenarios":5 #How many runs is the individual evaluated on when computing the fitness. Has no effect if simulation_type is evolution_seed
 }
 
 #Load parameters onto memory
@@ -51,8 +51,13 @@ PARENT_SELECTION_TYPE =params['parent_selection_type']  # Type of parent selecti
 CROSSOVER_TYPE = params['crossover_type']  # Type of the crossover operator.
 MUTATION_TYPE = params['mutation_type']  # Type of the mutation operator.
 MUTATION_PROBABILITY = params['mutation_probability']  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
-PARENTS_PERCENTAGE= params['parents_percentage'] #Percentage of parents to keep in the next population, goes from 0 to 1
-EVALUATION_SCENARIOS= params['evaluation_scenarios']
+#PARENTS_PERCENTAGE= params['parents_percentage'] #Percentage of parents to keep in the next population, goes from 0 to 1
+SIMULATION_TYPE= params['simulation_type']
+if(SIMULATION_TYPE!="evolution_seed"):
+    EVALUATION_SCENARIOS= params['evaluation_scenarios']
+else:
+    EVALUATION_SCENARIOS=1
+
 gen_counter=0
 
 def list_envs():
@@ -77,25 +82,36 @@ def convert_observation(observation_matrix):
 
 
 def fitness_func(solution, sol_idx):
-    global keras_ga, model, observation_space_size, env,gen_counter
+    global torch_ga, model, observation_space_size, env,gen_counter
 
-    model_weights_matrix = pygad.kerasga.model_weights_as_matrix(model=model, weights_vector=solution)
-    model.set_weights(weights=model_weights_matrix)
+    weights=pygad.torchga.model_weights_as_dict(model=model, weights_vector=solution)
+    model.load_state_dict(weights)
     fitness=[]
     for evaluation_idx in range(1,EVALUATION_SCENARIOS+1):
         # play a series of games, return individual average reward
-        observation = env.reset(seed=gen_counter*evaluation_idx)[0]
+        if(SIMULATION_TYPE=="evolution_seed"):
+            observation = env.reset(seed=100)[0]
+        elif(SIMULATION_TYPE=="population_seed"):
+            observation = env.reset(seed=gen_counter * evaluation_idx)[0]
+        elif(SIMULATION_TYPE=="individual_seed"):
+            observation = env.reset()[0]
         observation = convert_observation(observation)
         sum_reward = 0
         done = False
         truncated=False
         while (not done) and (not truncated):
-            state = np.reshape(observation, [1, observation_space_size])
-            final_layer = model.predict(state,verbose=0)
-            action = np.argmax(final_layer[0])
+            state = torch.FloatTensor(observation)
+            state=state.to(device)
+            final_layer = model(state)
+            output=final_layer.cpu().detach().numpy()
+            action = np.argmax(output)
             observation_next, reward, done,truncated, info = env.step(action)
             observation = convert_observation(observation_next)
             sum_reward += reward
+        """if truncated:
+            sum_reward+=20
+        if done:
+            sum_reward-=10"""
         fitness.append(sum_reward)
     return sum(fitness)/len(fitness)
 
@@ -111,21 +127,6 @@ def save_frames_as_gif(frames, path='./run/', filename='gym_animation.gif'):
 
     anim = animation.FuncAnimation(plt.gcf(), animate, frames=len(frames), interval=50)
     anim.save(path + filename, writer='imagemagick', fps=60)
-def testDemo(model, env):
-    for i in range(10):
-        frames=[]
-        score=0
-        observation = convert_observation(env.reset()[0])
-        done = False
-        truncated = False
-        while (not done) and (not truncated):
-            state = np.reshape(observation, [1, observation_space_size])
-            final_layer = model.predict(state, verbose=0)
-            action = np.argmax(final_layer[0])
-            observation_, reward, done, truncated, info = env.step(action)
-            observation_ = convert_observation(observation_)
-            frames.append(env.render())
-        save_frames_as_gif(frames=frames, filename=str(i)+"_best_agent_visualized_.gif")
 
 def mutation_func(offspring, ga_instance):
     mean=0
@@ -151,6 +152,39 @@ def callback_generation(ga_instance):
     gen_counter+=1
     print("="*35)
 
+
+def evaluateModel(model, env):
+    """
+    Evaluate the model on 10 different scenarios, saves gifs and stores score results in a txt file
+    :param model:
+    :param env:
+    :return:
+    """
+    results=[]
+    for i in range(10):
+        observation = env.reset()[0]
+        observation = convert_observation(observation)
+        sum_reward = 0
+        done = False
+        truncated = False
+        frames=[]
+        while (not done) and (not truncated):
+            state = torch.FloatTensor(observation)
+            state = state.to(device)
+            final_layer = model(state)
+            output = final_layer.cpu().detach().numpy()
+            action = np.argmax(output)
+            observation_next, reward, done, truncated, info = env.step(action)
+            observation = convert_observation(observation_next)
+            sum_reward += reward
+            frames.append(env.render())
+        save_frames_as_gif(frames=frames, filename=str(i) + "_best_agent_visualized_.gif")
+        results.append(sum_reward)
+    with open('score_results.txt', 'w') as f:
+        for result_idx in range(len(results)):
+            string="Scenario "+str(result_idx)+" score: "+str(results[result_idx])+"\n"
+            f.write(string)
+
 env = gym.make("highway-fast-v0", render_mode='rgb_array')
 config = {
         "observation": {
@@ -162,7 +196,8 @@ config = {
         },
         "duration": 40,  # [s]
         "lanes_count": 4,
-        "collision_reward":-5,
+        "collision_reward":-10,
+        "high_speed_reward":1,
         "reward_speed_range": [23, 30],
         "normalize_reward": False
     }
@@ -170,29 +205,31 @@ env.configure(config)
 observation_space_size=len(convert_observation(env.reset()[0]))
 action_space_size = env.action_space.n
 
-model = Sequential()
-model.add(Dense(16, input_shape=(observation_space_size,), activation='tanh'))
-model.add(Dense(8, activation='tanh'))
-model.add(Dense(action_space_size, activation='linear'))
-model.summary()
+layer1 = torch.nn.Linear(observation_space_size, 16)
+relu = torch.nn.ReLU()
+layer2 = torch.nn.Linear(16, 5)
+#layer3 = torch.nn.Linear(8, 5)
 
-keras_ga = pygad.kerasga.KerasGA(model=model, num_solutions=NUM_INDIVIDUALS)
+model = torch.nn.Sequential(layer1,
+                            relu,
+                            layer2)
 
-
+model=model.to(device)
 torch_ga=pygad.torchga.TorchGA(model=model,num_solutions=NUM_INDIVIDUALS)
 
 
-if(PARENTS_PERCENTAGE==1):
+"""if(PARENTS_PERCENTAGE==1):
     keep_parents=-1
 else:
-    keep_parents = int(NUM_INDIVIDUALS*PARENTS_PERCENTAGE)  # Number of parents to keep in the next population. -1 means keep all parents and 0 means keep nothing.
+    keep_parents = int(NUM_INDIVIDUALS*PARENTS_PERCENTAGE)"""  # Number of parents to keep in the next population. -1 means keep all parents and 0 means keep nothing.
 
-initial_population = keras_ga.population_weights  # Initial population of network weights
+initial_population = torch_ga.population_weights  # Initial population of network weights
 print("GA settings:")
 print(params)
 print("Environment settings")
 print(config)
 print("Input type:",observation_space_size)
+
 ga_instance = pygad.GA(num_generations=NUM_GENERATIONS,
                        num_parents_mating=NUM_PARENTS_MATING,
                        initial_population=initial_population,
@@ -201,36 +238,21 @@ ga_instance = pygad.GA(num_generations=NUM_GENERATIONS,
                        crossover_type=CROSSOVER_TYPE,
                        mutation_type=MUTATION_TYPE,
                        mutation_probability=MUTATION_PROBABILITY,
-                       keep_parents=keep_parents,
-                       keep_elitism=0,
+                       #keep_parents=keep_parents,
+                       keep_elitism=4,
                        on_generation=callback_generation,
-                       save_solutions=False)
-
-"""ga_instance = pygad.GA(num_generations=NUM_GENERATIONS,
-                       num_parents_mating=NUM_PARENTS_MATING,
-                       initial_population=initial_population,
-                       fitness_func=fitness_func,
-                       parent_selection_type=PARENT_SELECTION_TYPE,
-                       crossover_type=CROSSOVER_TYPE,
-                       mutation_type=mutation_func,
-                       mutation_percent_genes=MUTATION_PERCENT_GENES,
-                       keep_parents=keep_parents,
-                       keep_elitism=0,
-                       on_generation=callback_generation,
-                       save_solutions=False)"""
+                       allow_duplicate_genes=True,
+                       save_solutions=True)
 
 ga_instance.run()
-
-# After the generations complete, some plots are showed that summarize how the outputs/fitness values evolve over generations.
-ga_instance.plot_fitness(title="PyGAD & Keras - Iteration vs. Fitness", linewidth=4)
+solution, solution_fitness, solution_idx = ga_instance.best_solution()
+best_weights = pygad.torchga.model_weights_as_dict(model=model, weights_vector=solution)
+model.load_state_dict(best_weights)
+torch.save(model.state_dict(), "best_solution.pt")
+evaluateModel(model,env)
 
 wandb.finish()
 # Returning the details of the best solution.
-solution, solution_fitness, solution_idx = ga_instance.best_solution()
 print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
 print("Index of the best solution : {solution_idx}".format(solution_idx=solution_idx))
 
-model_weights_matrix = pygad.kerasga.model_weights_as_matrix(model=model, weights_vector=solution)
-model.set_weights(weights=model_weights_matrix)
-
-model.save("highway_weights")

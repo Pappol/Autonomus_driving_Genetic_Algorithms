@@ -108,7 +108,7 @@ def learnDQNetwork():
         , "action": {
             "type": "DiscreteMetaAction",
         },
-        "duration": 40,  # [s]
+        "duration": 60,  # [s]
         "lanes_count": 4,
         "collision_reward": -5,  # The reward received when colliding with a vehicle.
         "reward_speed_range": [23, 30],
