@@ -1,38 +1,107 @@
 import gymnasium as gym
-import highway_env
-import matplotlib.pyplot as plt
-import time
 import torch
 import numpy as np
 import os
 import neat
-from gymnasium.wrappers import RecordVideo
+import warnings
+warnings.filterwarnings("ignore")
+from neat import parallel
 
+def convert_observation(observation_matrix):
+    """
+    Converts observation matrix from VxLxH to L array, where the array contains the depth of the closest collision
+    :param observation_matrix:
+    :return:
+    """
+    collision_vector=[]
+    for row in observation_matrix[1]:
+    
+            index = np.where(row > 0)[0]
+            
+            if len(index) > 0:
+                collision_vector.append(index[0])
+            else:
+                collision_vector.append(-1)
+    return collision_vector
+
+
+def eval_genome(genome, config):
+    net = neat.nn.FeedForwardNetwork.create(genome, config) # net.create creates just one net
+    fitness = 0.0
+    observation = env.reset(seed=10)[0]
+    observation = convert_observation(observation)
+            
+    is_done = terminated = False
+            
+    while not(is_done) and not(terminated):
+        #print(observation)
+        state = torch.FloatTensor(observation)
+                
+        #print(observation_idx)
+                
+        q_values = net.activate(state)                
+        q_values_tens = torch.Tensor(q_values)
+                
+
+        _, selected_action = torch.max(q_values_tens, dim = 0)
+                
+        #print(_, selected_action)
+        action = int(selected_action.item())
+                
+                    
+        new_state, reward, is_done, terminated, info = env.step(action)
+                
+        # if the current episode has ended
+        observation = convert_observation(new_state)    
+                    
+        fitness += reward               
+    
+    return fitness
 
 def eval_genomes(genomes, config):
-    for genome_id, genome in genomes:
-        net = neat.nn.FeedForwardNetwork.create(genome, config)
-        observation = env.reset(seed=10)[0].flatten()
-        done = False
-        fitness = 0.0
-        # while not done:
-        #     action = net.activate(observation)
-        #     #argmax the function
-        #     action = np.argmax(action)
-        #     observation_, reward, done, _, info = env.step(action)
-        #     observation_ = observation.flatten()
-        #     fitness += reward
-        #     observation = observation_
-        terminated = truncated = False
-        while not (terminated or truncated):
-            action = net.activate(observation)
-            action = np.argmax(action)
-            observation_, reward, terminated, truncated, info = env.step(action)
-            observation_ = observation.flatten()
-            fitness += reward
-            observation = observation_
+    #observation = env.reset(seed=1)[0].flatten()
+    #total_rewards = []
+        
+        for genome_id, genome in genomes:
+            #print('GENOME', genome_id)
+            #print(genome)
+            net = neat.nn.FeedForwardNetwork.create(genome, config) # net.create creates just one net
+            fitness = 0.0
+            observation = env.reset(seed=10)[0]
+            observation = convert_observation(observation)
+            
+            is_done = terminated = False
+            
+            while not(is_done) and not(terminated):
+                #print(observation)
+                state = torch.FloatTensor(observation)
+                
+                #print(observation_idx)
+                
+                q_values = net.activate(state)                
+                q_values_tens = torch.Tensor(q_values)
+                
 
-        genome.fitness = fitness
+                _, selected_action = torch.max(q_values_tens, dim = 0)
+                
+                #print(_, selected_action)
+                action = int(selected_action.item())
+                
+                    
+                new_state, reward, is_done, terminated, info = env.step(action)
+                
+                # if the current episode has ended
+                observation = convert_observation(new_state)    
+                    
+                fitness += reward               
+                
+                #observation = observation.flatten()
+            #env.close()
+            #print('gain', gain)
+            genome.fitness = fitness
+        
+        return fitness
+
 
 def learn(env, config_path):
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
@@ -43,27 +112,27 @@ def learn(env, config_path):
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
-    winner = p.run(eval_genomes, 30)
+    winner = p.run(eval_genomes, 50)
     print('\nBest genome:\n{!s}'.format(winner))
 
     #test the best genome
     winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
     #show winner in action
-    observation = env.reset(seed=10)[0].flatten()
+    observation = env.reset(seed=42)[0].flatten()
     done = False
-    while not done:
-        action = winner_net.activate(observation)
-        #argmax the function
-        action = np.argmax(action)
-        observation_, _, done, _, info = env.step(action)
-        #normazlize the observation over 3 values
+    while not(is_done) and not(terminated):
+            
+        state = torch.FloatTensor(observation)
+        q_values = winner_net.activate(state)                
+        q_values_tens = torch.Tensor(q_values)
+
+        _, selected_action = torch.max(q_values_tens, dim = 0)
+        action = int(selected_action.item())
         
-
-        observation_ = observation.flatten()
-        observation = observation_
+        new_state, reward, is_done, terminated, info = env.step(action)
+        # if the current episode has ended
+        observation = convert_observation(new_state)    
         env.render()
-
-
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -77,31 +146,20 @@ if __name__ == '__main__':
             "type": "DiscreteMetaAction",
         },
         "duration": 40,  # [s]
-        "lanes_count": 3,
-        "initial_spacing": 2,
-        "collision_reward": -5,  # The reward received when colliding with a vehicle.
-        "reward_speed_range": [20, 30],
-        #reward
-        "reward": {
-            "type": "aggressive",
-            "on_collision": -5,
-            "on_lane_change": -0.1,
-            "on_lane_change_success": 0.5,
-            "on_right_lane": 0.1,
-            "high_speed": 0.4,
-            "high_accel": 0.2,
-            "close_to_intersection": 0.2,
-            "on_route": 0.2,
-            "steering": 0.2,
-            "distance_from_center": 0.2,
-            "heading_difference": 0.2,
-            "in_front": 0.2,
-            "speed_difference": 0.2,
-            "lane_difference": 0.2
-            }
-    }
+        "lanes_count": 4,
+        "collision_reward":-10,
+        "high_speed_reward":1,
+        "reward_speed_range": [23, 30],
+        "normalize_reward": False
+        }
 
     env = gym.make("highway-fast-v0", render_mode='rgb_array')
+    env.configure(config)
+    env.configure({'observation': 
+                {'type': 'TimeToCollision', 'horizon': 10}, 
+                    'action': {'type': 'DiscreteMetaAction'}, 
+                    'duration': 40, 'lanes_count': 4, 'collision_reward': -10, 'high_speed_reward': 1, 'reward_speed_range': [23, 30], 'normalize_reward': False})
+
 
     # Wrap the env by a RecordVideo wrapper
     """env = RecordVideo(env, video_folder="run", episode_trigger=lambda e: True)  # record all episodes
@@ -109,9 +167,40 @@ if __name__ == '__main__':
     # Provide the video recorder to the wrapped environment
     # so it can send it intermediate simulation frames.
     env.unwrapped.set_record_video_wrapper(env)"""
-    env.configure(config)
     
+
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-ff.txt')
+    config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
+                                neat.DefaultSpeciesSet, neat.DefaultStagnation,
+                                config_path)
+    
+    p = neat.Population(config)
+    p.add_reporter(neat.StdOutReporter(True))
+    stats = neat.StatisticsReporter()
+    p.add_reporter(stats)
+    evaluator = parallel.ParallelEvaluator(24, eval_genome)
+    winner = p.run(evaluator.evaluate, 2)
+    print('\nBest genome:\n{!s}'.format(winner))
+    #show best genome in action
+    winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
+    observation = env.reset(seed=10)[0]
+    observation = convert_observation(observation)
 
-    learn(env, config_path)
+    is_done = terminated = False
+            
+    while not(is_done) and not(terminated):
+
+        state = torch.FloatTensor(observation)
+                    
+        q_values = winner_net.activate(state)                
+        q_values_tens = torch.Tensor(q_values)
+        
+        _, selected_action = torch.max(q_values_tens, dim = 0)
+        
+        action = int(selected_action.item())
+      
+        new_state, reward, is_done, terminated, info = env.step(action)
+        observation = convert_observation(new_state)
+        
+        env.render()

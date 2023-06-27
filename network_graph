@@ -1,0 +1,15 @@
+digraph {
+	input_1 [label=input_1]
+	input_2 [label=input_2]
+	input_3 [label=input_3]
+	hidden [label=hidden]
+	1 [label=1]
+	2 [label=2]
+	3 [label=3]
+	input_1 -> hidden
+	input_2 -> hidden
+	input_3 -> hidden
+	hidden -> 1
+	hidden -> 2
+	hidden -> 3
+}
