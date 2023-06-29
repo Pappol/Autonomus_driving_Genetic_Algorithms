@@ -73,8 +73,8 @@ class PooledErrorCompute(object):
         self.test_episodes = []
         self.generation = 0
 
-        self.min_reward = -200
-        self.max_reward = 200
+        self.min_reward = 0
+        self.max_reward = 50
 
         self.episode_score = []
         self.episode_length = []
@@ -200,7 +200,7 @@ def run():
             solved = True
             best_scores = []
             for k in range(100):
-                observation = env.reset()
+                observation = env.reset()[0]
                 score = 0
                 step = 0
                 while 1:
@@ -209,11 +209,13 @@ def run():
                     # determine the best action given the current state.
                     votes = np.zeros((4,))
                     for n in best_networks:
+                        observation = np.array(observation).flatten()
                         output = n.activate(observation)
                         votes[np.argmax(output)] += 1
 
                     best_action = np.argmax(votes)
                     observation, reward, done, info = env.step(best_action)
+                    observation = np.array(observation).flatten()
                     score += reward
                     env.render()
                     if done:
@@ -225,7 +227,7 @@ def run():
                 best_scores.append(score)
                 avg_score = sum(best_scores) / len(best_scores)
                 print(k, score, avg_score)
-                if avg_score < 200:
+                if avg_score > 40:
                     solved = False
                     break
 
