@@ -14,7 +14,7 @@ import visualize
 NUM_CORES = 10
 
 
-env = gym.make('highway')
+env = gym.make('highway-v0')
 
 print("action space: {0!r}".format(env.action_space))
 print("observation space: {0!r}".format(env.observation_space))
@@ -59,7 +59,7 @@ def compute_fitness(genome, net, episodes, min_reward, max_reward):
         dr = np.clip(dr, -1.0, 1.0)
 
         for row, dr in zip(data, dr):
-            observation = row[:8]
+            observation = row[:25]
             action = int(row[8])
             output = net.activate(observation)
             reward_error.append(float((output[action] - dr) ** 2))
