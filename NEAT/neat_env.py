@@ -8,10 +8,7 @@ import gymnasium as gym
 import numpy as np
 import os
 
-from neat import parallel
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
-import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
 import neat
