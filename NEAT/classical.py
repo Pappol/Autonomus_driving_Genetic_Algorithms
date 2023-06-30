@@ -29,7 +29,7 @@ config_env = {
         "normalize_reward": False
         }
 
-env = gym.make("highway-v0", render_mode='rgb_array')
+env = gym.make("highway-fast-v0", render_mode='rgb_array')
 env.configure(config_env)
 
 print("action space: {0!r}".format(env.action_space))
@@ -93,8 +93,9 @@ def compute_fitness(genome, net, episodes, min_reward, max_reward):
     for score, data in episodes:
         # Compute normalized discounted reward.
         dr = np.convolve(data[:, -1], discount_function)[m:]
-        dr = 2 * (dr - min_reward) / (max_reward - min_reward) - 1.0
-        dr = np.clip(dr, -1.0, 1.0)
+        #normalize the reward
+        dr = (dr - min_reward) / (max_reward - min_reward)
+
 
         for row, dr in zip(data, dr):
             observation = row[:3]
@@ -210,7 +211,7 @@ def run():
     ec = PooledErrorCompute(NUM_CORES)
     while 1:
         try:
-            gen_best = pop.run(ec.evaluate_genomes, 5)
+            gen_best = pop.run(ec.evaluate_genomes, 20)
 
             # print(gen_best)
 
