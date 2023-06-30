@@ -9,9 +9,9 @@ fitness_threshold     = 1000.0
 reset_on_extinction   = 0
 
 [DriverGenome]
-num_inputs              = 25
+num_inputs              = 3
 num_hidden              = 0
-num_outputs             = 4
+num_outputs             = 5
 initial_connection      = partial 0.5
 feed_forward            = True
 compatibility_disjoint_coefficient = 1.0

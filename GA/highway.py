@@ -77,7 +77,7 @@ def convert_observation(observation_matrix):
         if len(index) > 0:
             collision_vector.append(index[0])
         else:
-            collision_vector.append(-1)
+            collision_vector.append(-1)   
     return collision_vector
 
 

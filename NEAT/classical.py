@@ -11,13 +11,51 @@ import gymnasium as gym
 import neat
 import visualize
 
-NUM_CORES = 10
+NUM_CORES = 24
 
+config_env = {
+        "observation": {
+            "type": "TimeToCollision",
+            "horizon": 10
+        }
+        , "action": {
+            "type": "DiscreteMetaAction",
+        },
+        "duration": 40,  # [s]
+        "lanes_count": 4,
+        "collision_reward":-10,
+        "high_speed_reward":1,
+        "reward_speed_range": [23, 30],
+        "normalize_reward": False
+        }
 
-env = gym.make('highway-v0')
+env = gym.make("highway-v0", render_mode='rgb_array')
+env.configure(config_env)
 
 print("action space: {0!r}".format(env.action_space))
 print("observation space: {0!r}".format(env.observation_space))
+
+def convert_observation(observation_matrix):
+    """
+    Converts observation matrix from VxLxH to L array, where the array contains the depth of the closest collision
+    :param observation_matrix:
+    :return:
+    """
+    collision_vector=[]
+    for row in observation_matrix:
+        index = np.where(row > 0)[0]
+        if len(index) > 0:
+            collision_vector.append(index[0])
+        else:
+            collision_vector.append(-1)
+        
+    observation_space_size=env.observation_space.shape[0]
+    #normalize the values keeping -1 as it is
+    collision_vector=[x/observation_space_size if x!=-1 else x for x in collision_vector]
+    #set the values to 0.1 if they are 0
+    collision_vector=[0.1 if x==0.0 else x for x in collision_vector]
+    return collision_vector
+
 
 
 class DriverGenome(neat.DefaultGenome):
@@ -59,8 +97,8 @@ def compute_fitness(genome, net, episodes, min_reward, max_reward):
         dr = np.clip(dr, -1.0, 1.0)
 
         for row, dr in zip(data, dr):
-            observation = row[:25]
-            action = int(row[8])
+            observation = row[:3]
+            action = int(row[3])
             output = net.activate(observation)
             reward_error.append(float((output[action] - dr) ** 2))
 
@@ -73,8 +111,8 @@ class PooledErrorCompute(object):
         self.test_episodes = []
         self.generation = 0
 
-        self.min_reward = 0
-        self.max_reward = 50
+        self.min_reward = -15
+        self.max_reward = 40
 
         self.episode_score = []
         self.episode_length = []
@@ -82,7 +120,7 @@ class PooledErrorCompute(object):
     def simulate(self, nets):
         scores = []
         for genome, net in nets:
-            observation = env.reset()[0]
+            observation = env.reset(seed=10)[0]
             step = 0
             data = []
             while 1:
@@ -90,12 +128,12 @@ class PooledErrorCompute(object):
                 if step < 200 and random.random() < 0.2:
                     action = env.action_space.sample()
                 else:
-                    observation = np.array(observation).flatten()
+                    observation = convert_observation(observation)
                     output = net.activate(observation)
                     action = np.argmax(output)
 
                 observation, reward, done, truncated, info = env.step(action)
-                observation = np.array(observation).flatten()
+                observation =convert_observation(observation)
                 data.append(np.hstack((observation, action, reward)))
 
                 if done or truncated:
@@ -207,15 +245,15 @@ def run():
                     step += 1
                     # Use the total reward estimates from all five networks to
                     # determine the best action given the current state.
-                    votes = np.zeros((4,))
+                    votes = np.zeros((5,))
                     for n in best_networks:
-                        observation = np.array(observation).flatten()
+                        observation = convert_observation(observation)
                         output = n.activate(observation)
                         votes[np.argmax(output)] += 1
 
                     best_action = np.argmax(votes)
-                    observation, reward, done, info = env.step(best_action)
-                    observation = np.array(observation).flatten()
+                    observation, reward, done, _ , info = env.step(best_action)
+                    observation = convert_observation(observation)
                     score += reward
                     env.render()
                     if done:
