@@ -4,14 +4,17 @@ import numpy as np
 import wandb
 import torch
 import statistics
+import matplotlib.pyplot as plt
+from matplotlib import animation
 
 params={
-    "num_evaluations":3,
+    "num_evaluations":1,
     "lambda":100,
     "mu":40,
-    "initialization_method":"random", #Choose between "random" or "zeros"
-    "seed_mode":"random", #Choose between "random" or "fixed"
-    "hidden_layers_net": 1 #Choose between 1 or 2
+    "initialization_method":"zeros", #Choose between "random" or "zeros"
+    "seed_mode":"fixed", #Choose between "random" or "fixed"
+    "hidden_layers_net": 1, #Choose between 1 or 2
+    "num_generations":100
 }
 evaluation_scenarios=params["num_evaluations"]
 lambda_=params["lambda"]
@@ -20,8 +23,7 @@ mutation_magnitude=2
 initialization_method=params["initialization_method"]
 seed_mode=params["seed_mode"]
 hidden_layers_net=params["hidden_layers_net"]
-
-params={"num_evaluations":evaluation_scenarios, "lambda":lambda_, "mu":mu, "seed_mode":SEED_MODE}
+gen_number=params["num_generations"]
 
 device=0
 wandb.init(project='highway_CMA')
@@ -88,31 +90,77 @@ def evaluate_policy(params):
             state = state.to(device)
             final_layer = net(state)
             output = final_layer.cpu().detach().numpy()
-            action = np.argmax(output)
+            action = np.argmax(output) #Get the action with highest confidence
+            confidence=output[action] #Get confidence of action
             observation_next, reward, done, truncated, info = env.step(action)
             observation = convert_observation(observation_next)
-            sum_reward += reward
+            sum_reward += reward*confidence #Multiply reward by confidence
         fitnesses.append(sum_reward)
     #return -sum_reward  # CMA-ES minimizes the fitness function, so we negate the reward
     return -(sum(fitnesses) / len(fitnesses))# CMA-ES minimizes the fitness function, so we negate the reward
 
+def save_frames_as_gif(frames, path='./run/', filename='gym_animation.gif'):
+    # Mess with this to change frame size
+    plt.figure(figsize=(frames[0].shape[1] / 72.0, frames[0].shape[0] / 72.0), dpi=72)
+
+    patch = plt.imshow(frames[0])
+    plt.axis('off')
+
+    def animate(i):
+        patch.set_data(frames[i])
+
+    anim = animation.FuncAnimation(plt.gcf(), animate, frames=len(frames), interval=50)
+    anim.save(path + filename, writer='imagemagick', fps=60)
+def evaluateModel(best_solution, env):
+    model=loadNetWeights(best_solution)
+    torch.save(model.state_dict(),"model.pt")
+    model=model.to(device)
+    results=[]
+    for i in range(10):
+        observation = env.reset()[0]
+        observation = convert_observation(observation)
+        sum_reward = 0
+        done = False
+        truncated = False
+        frames=[]
+        while (not done) and (not truncated):
+            state = torch.FloatTensor(observation)
+            state = state.to(device)
+            final_layer = model(state)
+            output = final_layer.cpu().detach().numpy()
+            action = np.argmax(output)
+            observation_next, reward, done, truncated, info = env.step(action)
+            observation = convert_observation(observation_next)
+            sum_reward += reward
+            frames.append(env.render())
+        save_frames_as_gif(frames=frames, filename=str(i) + "_best_agent_visualized_.gif")
+        results.append(sum_reward)
+    with open('score_results.txt', 'w') as f:
+        for result_idx in range(len(results)):
+            string="Scenario "+str(result_idx)+" score: "+str(results[result_idx])+"\n"
+            f.write(string)
+
+
 observation_space_size=len(convert_observation(env.reset()[0]))
 layer1 = torch.nn.Linear(observation_space_size, 16)
-relu = torch.nn.ReLU()
 layer2a = torch.nn.Linear(16, 5)
 layer2b = torch.nn.Linear(16, 16)
 layer3 = torch.nn.Linear(16, 5)
+relu = torch.nn.ReLU()
+softmax=torch.nn.Softmax(dim=0)
 if hidden_layers_net==1:
     model = torch.nn.Sequential(layer1,
                             relu,
                             layer2a,
+                            softmax
                             )
 elif hidden_layers_net==2:
     model = torch.nn.Sequential(layer1,
                                 relu,
                                 layer2b,
                                 relu,
-                                layer3
+                                layer3,
+                                softmax
                                 )
 num_params = sum(p.numel() for p in model.parameters())# Get the total number of weights in the network
 
@@ -129,7 +177,7 @@ es = cma.CMAEvolutionStrategy(initial_mean, mutation_magnitude,{'popsize': lambd
 best_fitness = np.inf
 gen_idx=0
 print(params)
-while not es.stop():
+while gen_idx!=gen_number:
     solutions = es.ask()
     fitness_list = [evaluate_policy(params) for params in solutions]
     es.tell(solutions, fitness_list)
@@ -149,6 +197,7 @@ while not es.stop():
 
 # Print the best solution and its fitness
 best_solution,best_fitness,index = es.best.get()
+evaluateModel(best_solution,env)
 print('Best solution:', best_solution)
 print('Best fitness:', best_fitness)
 wandb.finish()
