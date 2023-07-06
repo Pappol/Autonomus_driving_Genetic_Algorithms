@@ -21,7 +21,7 @@ warnings.filterwarnings("ignore")
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 print(device)
 path = "/Users/pappol/Desktop/uni/Bio inspired/project/NEAT/"
-N_GEN = 100
+N_GEN = 150
 
 class DriverGenome(neat.DefaultGenome):
     def __init__(self, key):
