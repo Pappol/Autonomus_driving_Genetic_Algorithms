@@ -183,14 +183,14 @@ def main(args):
                 frames.append(env.render())
 
         print('fitness', sum_reward)
-        save_frames_as_gif(frames=frames, path = save_path, filename=str(i) + "_best_agent_visualized_.gif")
+        save_frames_as_gif(frames=frames, path = save_path, filename=str(i) + "_best_agent_visualized_"+str(n_training_env)+".gif")
         
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='NEAT algorithm for the highway environment')
     parser.add_argument('--config_path', type=str, default='config_ex.txt', 
                         help='path of the config file')
-    parser.add_argument('--generations', type=int, default=50,
+    parser.add_argument('--generations', type=int, default=100,
                         help='number of generations')
     parser.add_argument('--save_path', type=str, default='gif/',
                         help='path of the folder where to save the gif')
