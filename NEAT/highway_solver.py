@@ -9,6 +9,7 @@ import torch
 import torch.nn as nn
 from matplotlib import animation
 import wandb
+import visualize
 
 wandb.init(project="neat-highway")
 
@@ -140,6 +141,9 @@ def run(env, config_path):
     p.add_reporter(stats)
 
     winner = p.run(eval_genomes, N_GEN)
+
+    visualize.draw_net(config, winner, view=False, filename= "winner-net.gv")
+    visualize.draw_net(config, winner, view=False, filename= "winner-net-pruned.gv", prune_unused=True)
 
     print('\nBest genome:\n{!s}'.format(winner))
     
