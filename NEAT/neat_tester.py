@@ -87,7 +87,7 @@ def eval_genomes(genomes, config):
                 
             genome_fitness.append(cumulative_fitness)
 
-        genome.fitness = sum(genome_fitness) / 3
+        genome.fitness = sum(genome_fitness) / n_training_env
         #wandb.log({"individual_fitness": genome.fitness}, commit=False)
         test_fitness.append(genome)
 
@@ -120,9 +120,9 @@ def eval_genomes(genomes, config):
                 frames.append(env.render())
 
             print('fitness', sum_reward)
-            save_frames_as_gif(frames=frames, path = save_path, filename=str(i) + '_genome_' + str(test_fitness[0].key) + "_best_agent_visualized_.gif")
-            visualize.draw_net(config, test_fitness[0], view=False, filename= save_path + str(i) + '_genome_' + str(test_fitness[0].key) + "_winner-net.gv")
-            visualize.draw_net(config, test_fitness[0], view=False, filename= save_path + str(i) + '_genome_' + str(test_fitness[0].key) + "_winner-net-pruned.gv", prune_unused=True)
+            save_frames_as_gif(frames=frames, path = save_path, filename=str(i) + '_genome_' + str(test_fitness[0].key) + "_best_agent_visualized_TR_"+str(n_training_env)+".gif")
+            visualize.draw_net(config, test_fitness[0], view=False, filename= save_path + str(i) + '_genome_' + str(test_fitness[0].key) + "_winner-net_TR_"+str(n_training_env)+".gv")
+            visualize.draw_net(config, test_fitness[0], view=False, filename= save_path + str(i) + '_genome_' + str(test_fitness[0].key) + "_winner-net-pruned_TR_"+str(n_training_env)+".gv", prune_unused=True)
 
 def main(args):
     config = neat.config.Config(DriverGenome, neat.DefaultReproduction,
@@ -136,8 +136,8 @@ def main(args):
 
     winner = p.run(eval_genomes, args.generations)
 
-    visualize.draw_net(config, winner, view=False, filename= "winner-net.gv")
-    visualize.draw_net(config, winner, view=False, filename= "winner-net-pruned.gv", prune_unused=True)
+    visualize.draw_net(config, winner, view=False, filename= "nets/winner-net-"+str(n_training_env)+".gv")
+    visualize.draw_net(config, winner, view=False, filename= "nets/winner-net-pruned-"+str(n_training_env)+".gv", prune_unused=True)
 
     print('\nBest genome:\n{!s}'.format(winner))
 
@@ -160,7 +160,7 @@ def main(args):
                 sum_reward += reward
 
         print('fitness', sum_reward)
-        env_scores.append(i, sum_reward)
+        env_scores.append([i, sum_reward])
 
     env_scores.sort(reverse=True)
 
@@ -221,3 +221,4 @@ if __name__ == '__main__':
     wandb.init(project="neat-testing", name="different-env-{}".format(n_training_env))
 
     main(args)
+ 
