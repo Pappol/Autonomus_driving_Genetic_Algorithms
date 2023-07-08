@@ -30,17 +30,17 @@ wandb.init(project='GA_highway')
 
 #PARAMETERS
 params={
-    "num_individuals" : 50,
+    "num_individuals" : 100,
     "num_generations" : 100,  # Number of generations.
-    "num_parents_mating" : 5,  # Number of solutions to be selected as parents in the mating pool.
+    "num_parents_mating" : 20,  # Number of solutions to be selected as parents in the mating pool.
     "parent_selection_type" : "rank",  # Type of parent selection.
     "crossover_type" : "single_point",  # Type of the crossover operator.
     "mutation_type" : "random",  # Type of the mutation operator.
     "mutation_probability" : 0.1,
     #"mutation_probability" : (0.35,0.05),  #Probability of modifying a gene, if adaptive is selected, its a tuple of 2 values with probability of mutation of bad solution and good solution
     #"parents_percentage":0.1, #Percentage of parents to keep in the next population, goes from 0 to 1
-    "simulation_type": "population_seed", #Choose from [evolution_seed,population_seed,individual_seed] Evolution means a single seed is used for the whole process, population seed means all individuals in the same population share the same environment, individual means every environoment is different,
-    "evaluation_scenarios":5 #How many runs is the individual evaluated on when computing the fitness. Has no effect if simulation_type is evolution_seed
+    "simulation_type": "evolution_seed", #Choose from [evolution_seed,population_seed,individual_seed] Evolution means a single seed is used for the whole process, population seed means all individuals in the same population share the same environment, individual means every environoment is different,
+    "evaluation_scenarios":3 #How many runs is the individual evaluated on when computing the fitness. Has no effect if simulation_type is evolution_seed
 }
 
 #Load parameters onto memory
@@ -53,10 +53,11 @@ MUTATION_TYPE = params['mutation_type']  # Type of the mutation operator.
 MUTATION_PROBABILITY = params['mutation_probability']  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
 #PARENTS_PERCENTAGE= params['parents_percentage'] #Percentage of parents to keep in the next population, goes from 0 to 1
 SIMULATION_TYPE= params['simulation_type']
-if(SIMULATION_TYPE!="evolution_seed"):
+EVALUATION_SCENARIOS=params['evaluation_scenarios']
+"""if(SIMULATION_TYPE!="evolution_seed"):
     EVALUATION_SCENARIOS= params['evaluation_scenarios']
 else:
-    EVALUATION_SCENARIOS=1
+    EVALUATION_SCENARIOS=1"""
 
 gen_counter=0
 
@@ -90,7 +91,7 @@ def fitness_func(solution, sol_idx):
     for evaluation_idx in range(1,EVALUATION_SCENARIOS+1):
         # play a series of games, return individual average reward
         if(SIMULATION_TYPE=="evolution_seed"):
-            observation = env.reset(seed=100)[0]
+            observation = env.reset(seed=evaluation_idx)[0]
         elif(SIMULATION_TYPE=="population_seed"):
             observation = env.reset(seed=gen_counter * evaluation_idx)[0]
         elif(SIMULATION_TYPE=="individual_seed"):
@@ -108,10 +109,6 @@ def fitness_func(solution, sol_idx):
             observation_next, reward, done,truncated, info = env.step(action)
             observation = convert_observation(observation_next)
             sum_reward += reward
-        """if truncated:
-            sum_reward+=20
-        if done:
-            sum_reward-=10"""
         fitness.append(sum_reward)
     return sum(fitness)/len(fitness)
 
@@ -161,8 +158,8 @@ def evaluateModel(model, env):
     :return:
     """
     results=[]
-    for i in range(10):
-        observation = env.reset()[0]
+    for i in range(100):
+        observation = env.reset(seed=i)[0]
         observation = convert_observation(observation)
         sum_reward = 0
         done = False
@@ -196,7 +193,7 @@ config = {
         },
         "duration": 40,  # [s]
         "lanes_count": 4,
-        "collision_reward":-10,
+        "collision_reward":-5,
         "high_speed_reward":1,
         "reward_speed_range": [23, 30],
         "normalize_reward": False
