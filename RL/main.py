@@ -1,10 +1,10 @@
 import pickle
 import random
-
+import statistics
 import gymnasium as gym
 from gymnasium.wrappers import RecordVideo
 
-from model import Agent
+from model import Agent, DeepQNetwork
 import highway_env
 import matplotlib.pyplot as plt
 import time
@@ -98,6 +98,39 @@ def save_agent(best_agent):
     torch.save(best_agent.Q_eval.state_dict(), "best_agent_q_eval.pt")
 
 
+def evaluateAgent(agent, env):
+    results=[]
+    for i in range(100):
+        frames = []
+        score = 0
+        observation = convert_observation(env.reset(seed=i)[0])
+        done = False
+        truncated = False
+        while (not done) and (not truncated):
+            action = agent.choose_action(observation)
+            observation_, reward, done, truncated, info = env.step(action)
+            observation_ = convert_observation(observation_)
+            score += reward
+            #agent.store_transition(state=observation, action=action, reward=reward, state_=observation_, done=done)
+            #agent.learn()
+            observation = observation_
+            frames.append(env.render())
+        results.append(score)
+        save_frames_as_gif(frames=frames, filename=str(i) + "_best_agent_visualized_.gif")
+    with open('score_results.txt', 'w') as f:
+        for result_idx in range(len(results)):
+            string="Scenario "+str(result_idx)+" score: "+str(results[result_idx])+"\n"
+            f.write(string)
+    print("Mean:",statistics.mean(results))
+    print("Std:",statistics.stdev(results))
+    sorted_scores = sorted(results, reverse=True)
+    top_10_scores = sorted_scores[:10]
+    print("Top 10 mean",statistics.mean(top_10_scores))
+    with open('score_results.txt', 'w') as f:
+        for result_idx in range(len(results)):
+            string="Scenario "+str(result_idx)+" score: "+str(results[result_idx])+"\n"
+            f.write(string)
+
 def learnDQNetwork():
     wandb.init(project='Highway-DQN')
     config = {
@@ -108,11 +141,12 @@ def learnDQNetwork():
         , "action": {
             "type": "DiscreteMetaAction",
         },
-        "duration": 60,  # [s]
+        "duration": 40,  # [s]
         "lanes_count": 4,
-        "collision_reward": -5,  # The reward received when colliding with a vehicle.
+        "collision_reward": -5,
+        "high_speed_reward": 1,
         "reward_speed_range": [23, 30],
-        "normalize_reward":False
+        "normalize_reward": False
     }
     env = gym.make("highway-fast-v0", render_mode='rgb_array')
     # Wrap the env by a RecordVideo wrapper
@@ -159,14 +193,14 @@ def learnDQNetwork():
 
         wandb.log({"epidose":i,"score": score, "epsilon": agent.epsilon})
 
-    showDemo(best_agent, env)
+    #showDemo(best_agent, env)
+    evaluateAgent(best_agent, env)
     save_agent(best_agent)
 
     wandb.finish()
 
 
 # Press the green button in the gutter to run the script.
-
 
 if __name__ == '__main__':
     print(torch.cuda.is_available())
