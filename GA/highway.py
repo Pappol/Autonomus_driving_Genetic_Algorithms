@@ -40,7 +40,7 @@ params={
     #"mutation_probability" : (0.35,0.05),  #Probability of modifying a gene, if adaptive is selected, its a tuple of 2 values with probability of mutation of bad solution and good solution
     #"parents_percentage":0.1, #Percentage of parents to keep in the next population, goes from 0 to 1
     "simulation_type": "evolution_seed", #Choose from [evolution_seed,population_seed,individual_seed] Evolution means a single seed is used for the whole process, population seed means all individuals in the same population share the same environment, individual means every environoment is different,
-    "evaluation_scenarios":3 #How many runs is the individual evaluated on when computing the fitness. Has no effect if simulation_type is evolution_seed
+    "evaluation_scenarios":3 #How many runs is the individual evaluated on when computing the fitness
 }
 
 #Load parameters onto memory
@@ -54,10 +54,6 @@ MUTATION_PROBABILITY = params['mutation_probability']  # Percentage of genes to 
 #PARENTS_PERCENTAGE= params['parents_percentage'] #Percentage of parents to keep in the next population, goes from 0 to 1
 SIMULATION_TYPE= params['simulation_type']
 EVALUATION_SCENARIOS=params['evaluation_scenarios']
-"""if(SIMULATION_TYPE!="evolution_seed"):
-    EVALUATION_SCENARIOS= params['evaluation_scenarios']
-else:
-    EVALUATION_SCENARIOS=1"""
 
 gen_counter=0
 
