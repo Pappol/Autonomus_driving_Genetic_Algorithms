@@ -1,66 +1,56 @@
 
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
 from stable_baselines3 import DQN
 import gymnasium
-# from HighwayEnv.highway_env.envs.highway_env import HighwayEnvCustom
-from matplotlib import animation
-import matplotlib.pyplot as plt
-
-os.system("rm gifs/*")
+from stable_baselines3.common.save_util import load_from_zip_file
 from gymnasium.envs.registration import register
 
+from agent_test import dt
 register(
     id='highway-custom-v0',
     entry_point='HighwayEnv.highway_env.envs.highway_env:HighwayEnvCustom',
 )
 
+env = gymnasium.make("highway-v0",render_mode="rgb_array")
+env.configure(
+        {
+        'lanes_count': 3,
+        'duration': 40, 
+        'collision_reward': -5, 
+        'high_speed_reward': 1, 
+        'reward_speed_range': [23, 30], 
+        'normalize_reward': False})
+model = DQN('MlpPolicy', env, policy_kwargs=dict(net_arch=[256, 256]))
+data, params, pytorch_variables = load_from_zip_file(
+     "model_tmp.zip",
+     device="auto",
+     custom_objects=None,
+     print_system_info=False,
+)
+model.set_parameters(params, exact_match=True, device="auto")
 
-# from gymnasium.wrappers import Monitor
-env = gymnasium.make("highway-v0")
-
-config = {
-    "simulation_frequency": 10,
-    "duration": 50,  # [s]
-    # "vehicles_density": 1,
-    # "manual_control": True
+ACTIONS_ALL = {
+    "Left":  0,
+    "Idle":  1,
+    "Right": 2,
+    "Faster":3,
+    "Slower":4,
 }
-env.configure(config)
-obs, info = env.reset()
-# print(obs)
 
-def save_frames_as_gif(frames, path='./run/', filename='gym_animation.gif'):
-    # Mess with this to change frame size
-    plt.figure(figsize=(frames[0].shape[1] / 72.0, frames[0].shape[0] / 72.0), dpi=72)
+tmp = []
 
-    patch = plt.imshow(frames[0])
-    plt.axis('off')
-
-    def animate(i):
-        patch.set_data(frames[i])
-
-    anim = animation.FuncAnimation(plt.gcf(), animate, frames=len(frames), interval=50)
-    anim.save(path + filename, writer='pillow', fps=3)
-
-
-model = DQN.load("highway_dqn/model_tmp")
-r = [-40]
-while True:
-    frame = []
+for _ in range(100):
     tot_r = 0
     obs, info = env.reset()
     done = truncated = False
-    num_steps = 0
     while not (done or truncated):
-        action, _states = model.predict(obs, deterministic=True)
-        # action = env.action_space.sample()
+        # action, _states = model.predict(obs, deterministic=True)
+        action = ACTIONS_ALL[dt(obs)]
         obs, reward, done, truncated, info = env.step(action)
         tot_r += reward
-        num_steps += 1
-        frame.append(env.render())
-        # print(obs)
-        print("%.2f"%reward, action, "%.1f"%info["speed"], info["rewards"])
-    if tot_r > 0.9*max(r):
-        save_frames_as_gif(frame, "./", "gifs/%.3f.gif"%tot_r)
-    r.append(tot_r)
-    print("%.2f"%tot_r, "%.2f"%max(r), "%.1f"%info["speed"], info["rewards"])
+        env.render()
+    print(tot_r)
+    tmp.append(tot_r)
+breakpoint()

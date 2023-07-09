@@ -132,12 +132,13 @@ class HighwayEnvCustom(HighwayEnv):
                 "type": "DiscreteMetaAction",
             },
             "lanes_count": 3,
-            "vehicles_count": 50,
+            "vehicles_count": 20,
             "controlled_vehicles": 1,
             "initial_lane_id": None,
-            "duration": 50,  # [s]
+            "duration": 30,  # [s]
             "ego_spacing": 1.5,
             "simulation_frequency": 5,
+
 
             "vehicles_density": 1,
             "collision_reward": -40,    # The reward received when colliding with a vehicle.
@@ -148,7 +149,8 @@ class HighwayEnvCustom(HighwayEnv):
             "lane_change_reward": 0,   # The reward received at each lane change action.
             "reward_speed_range": [23, 30],
             "normalize_reward": False,
-            "offroad_terminal": True
+            "offroad_terminal": True,
+            "disable_collision_checks": True,
         })
         return config
 

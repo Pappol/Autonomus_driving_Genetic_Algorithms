@@ -1,0 +1,2021 @@
+[LOG] Initialized dataset
+gen	nevals	f_score 	avg     	std    	min  	max      
+1  	600   	0.120014	-79.9565	271.306	-1000	0.0842932
+2  	300   	0.120014	-9.94411	99.5044	-1000	0.0842932
+3  	300   	0.120014	0.0633118	0.00854404	0.0163067	0.0842932
+4  	300   	0.13588 	0.068426 	0.00705728	0.0163067	0.0894184
+5  	300   	0.13588 	0.0718279	0.00597809	0.0507154	0.0894184
+6  	300   	0.21525 	0.0750955	0.00607291	0.0596823	0.108473 
+7  	300   	0.21525 	0.0785471	0.0056592 	0.0636145	0.108473 
+8  	300   	0.21525 	0.0807431	0.00579645	0.0667594	0.108473 
+9  	300   	0.21525 	0.0821378	0.00544052	0.0667594	0.108473 
+10 	300   	0.192988	0.0843283	0.00689792	0.0667594	0.119114 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+env.select_oblique('(-0.469*px + -0.264*py + 0.309*vx + -0.935*vy)',' <  -0.873')
+if (not (env.get_params('vx',False) > -0.799)):
+    action='Faster'
+else:
+    if (not (env.get_params('vx',True) < 0.307)):
+        if ((env.get_params('vx',False) < -0.163)):
+            env.select_oblique('(0.179*px + 0.429*py + -0.565*vx + -0.641*vy)',' >  0.546')
+            if (not (env.get_params('vy',False) > -0.087)):
+                action='Right'
+            else:
+                action='Idle'
+            
+        else:
+            env.select_oblique('(0.108*px + 0.999*py + -0.646*vx + 0.508*vy)',' <  0.584')
+            if ((env.get_params('py',True) > 0.477)):
+                env.select_oblique('(0.241*px + 0.174*py + -0.793*vx + 0.69*vy)',' <  0.529')
+                if (not (env.get_params('py',True) > 0.357)):
+                    action='Right'
+                else:
+                    action='Idle'
+                
+            else:
+                action='Faster'
+            
+        
+    else:
+        if (not (env.get_params('px',False) > -0.065)):
+            action='Left'
+        else:
+            action='Slower'
+        
+    
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left    0.0  170.0    0.0  192.0   38.0 
+      Idle    0.0  130.0    0.0  181.0   89.0 
+     Right    0.0  108.0    0.0  226.0   66.0 
+    Faster    0.0  120.0    0.0  213.0   67.0 
+    Slower    0.0   92.0    0.0  145.0  163.0 
+F1-score: {'Left': '0.000', 'Idle': '0.255', 'Right': '0.000', 'Faster': '0.314', 'Slower': '0.396'}
+Fitness: (0.11911356401184958,)
+                 0           1           2           3           4
+reward    0.000000    0.160950    0.000000    0.281791    0.152827
+p_sim     0.300614    0.281264    0.206202    0.361769    0.299115
+f_sim   400.000000  682.227464  400.000000  781.891827  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+11 	300   	0.192988	0.086592 	0.00787271	0.073999 	0.119114 
+12 	300   	0.192988	0.0904477	0.00882519	0.0793261	0.119114 
+13 	300   	0.192988	0.094333 	0.00900719	0.0793261	0.119114 
+14 	300   	0.192988	0.0981348	0.00842503	0.0793261	0.119114 
+15 	300   	0.192988	0.101993 	0.00720781	0.0793261	0.119114 
+16 	300   	0.192988	0.104022 	0.0058406 	0.0822277	0.119114 
+17 	300   	0.179634	0.105561 	0.00504104	0.0822277	0.120959 
+18 	300   	0.179634	0.106774 	0.00484258	0.0826273	0.120959 
+19 	300   	0.198265	0.107815 	0.00517865	0.087878 	0.137918 
+20 	300   	0.198265	0.109147 	0.00589755	0.0917098	0.137918 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',False) < -0.163)):
+                env.select_oblique('(0.89*px + 0.429*py + -0.7*vx + -0.641*vy)',' >  0.09')
+                if (not (env.get_params('vy',True) < 0.236)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(0.108*px + 0.999*py + -0.646*vx + 0.508*vy)',' <  0.584')
+                if ((env.get_params('py',True) < 0.477)):
+                    env.select_oblique('(-0.782*px + 0.174*py + -0.793*vx + 0.69*vy)',' <  0.989')
+                    if (not (env.get_params('vx',True) > 0.357)):
+                        action='Right'
+                    else:
+                        action='Idle'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            if (not (env.get_params('vy',False) > -0.065)):
+                action='Left'
+            else:
+                action='Slower'
+            
+        
+    else:
+        action='Right'
+    
+else:
+    action='Faster'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left    0.0  185.0    7.0  170.0   38.0 
+      Idle    0.0  179.0    2.0  130.0   89.0 
+     Right    0.0  207.0   19.0  108.0   66.0 
+    Faster    0.0  191.0   22.0  120.0   67.0 
+    Slower    0.0  108.0   37.0   92.0  163.0 
+F1-score: {'Left': '0.000', 'Idle': '0.282', 'Right': '0.078', 'Faster': '0.235', 'Slower': '0.396'}
+Fitness: (0.13791836169745011,)
+                 0           1           2           3           4
+reward    0.000000    0.290064    0.024875    0.176234    0.198419
+p_sim     0.365196    0.329263    0.278228    0.395948    0.361229
+f_sim   400.000000  805.369811  414.314402  665.414122  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+21 	300   	0.198265	0.110635 	0.00649836	0.0951489	0.137918 
+22 	300   	0.198265	0.112151 	0.00696032	0.0951489	0.137918 
+23 	300   	0.198265	0.113553 	0.00729993	0.0951489	0.137918 
+24 	300   	0.21078 	0.115618 	0.00803606	0.0951489	0.14745  
+25 	300   	0.21078 	0.117697 	0.00836349	0.0951489	0.14745  
+26 	300   	0.21078 	0.119749 	0.00883686	0.0951489	0.14745  
+27 	300   	0.21078 	0.12165  	0.00902024	0.104139 	0.14745  
+28 	300   	0.21078 	0.124028 	0.0090671 	0.104139 	0.14745  
+29 	300   	0.21078 	0.126201 	0.00919482	0.104139 	0.150821 
+30 	300   	0.21078 	0.128222 	0.00960389	0.104139 	0.150821 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) < -0.599)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) < -0.163)):
+                env.select_oblique('(0.89*px + 0.429*py + -0.7*vx + -0.641*vy)',' <  -0.965')
+                if ((env.get_params('vy',True) < 0.236)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(0.699*px + 0.999*py + -0.646*vx + 0.508*vy)',' <  0.584')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.782*px + -0.83*py + -0.793*vx + 0.69*vy)',' <  0.989')
+                    if (not (env.get_params('vx',True) > 0.357)):
+                        action='Right'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            if ((env.get_params('py',False) > -0.661)):
+                action='Slower'
+            else:
+                action='Slower'
+            
+        
+    else:
+        action='Slower'
+    
+else:
+    action='Right'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  150.0    0.0   20.0  192.0   38.0 
+      Idle  127.0    0.0    3.0  181.0   89.0 
+     Right  102.0    0.0    6.0  226.0   66.0 
+    Faster   99.0    0.0   21.0  213.0   67.0 
+    Slower   63.0    0.0   29.0  145.0  163.0 
+F1-score: {'Left': '0.319', 'Idle': '0.000', 'Right': '0.025', 'Faster': '0.314', 'Slower': '0.396'}
+Fitness: (0.15082098665480934,)
+                 0           1           2           3           4
+reward    0.198395    0.000000    0.024565    0.315870    0.215275
+p_sim     0.371689    0.363946    0.301518    0.399250    0.354383
+f_sim   535.162668  400.000000  427.922563  781.891827  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+31 	300   	0.21078 	0.130245 	0.00975538	0.104139 	0.150821 
+32 	300   	0.21078 	0.132066 	0.00967044	0.105317 	0.150821 
+33 	300   	0.208275	0.13433  	0.0097405 	0.105317 	0.151475 
+34 	300   	0.208275	0.136532 	0.00939099	0.105317 	0.151475 
+35 	300   	0.208275	0.137948 	0.0092283 	0.105317 	0.151475 
+36 	300   	0.208275	0.139403 	0.00887432	0.111667 	0.151475 
+37 	300   	0.212669	0.140969 	0.00871537	0.111667 	0.1556   
+38 	300   	0.212669	0.142088 	0.00836584	0.111667 	0.1556   
+39 	300   	0.212669	0.143039 	0.00789328	0.115231 	0.1556   
+40 	300   	0.212669	0.143946 	0.00751927	0.115231 	0.1556   
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.124)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vx',True) < -0.163)):
+                env.select_oblique('(0.101*px + 0.429*py + -0.7*vx + -0.641*vy)',' >  -0.62')
+                if (not (env.get_params('vy',True) < 0.236)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.459*px + 0.999*py + 0.769*vx + -0.809*vy)',' <  0.361')
+                if (not (env.get_params('py',True) < 0.477)):
+                    env.select_oblique('(0.241*px + -0.95*py + -0.793*vx + 0.572*vy)',' <  -0.523')
+                    if ((env.get_params('py',True) > 0.662)):
+                        action='Right'
+                    else:
+                        action='Idle'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            if (not (env.get_params('py',False) > -0.64)):
+                action='Idle'
+            else:
+                action='Slower'
+            
+        
+    else:
+        action='Left'
+    
+else:
+    action='Faster'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left    0.0   11.0  159.0  192.0   38.0 
+      Idle    0.0   35.0   95.0  181.0   89.0 
+     Right    0.0   10.0   98.0  226.0   66.0 
+    Faster    0.0   26.0   94.0  213.0   67.0 
+    Slower    0.0   13.0   79.0  145.0  163.0 
+F1-score: {'Left': '0.000', 'Idle': '0.141', 'Right': '0.212', 'Faster': '0.314', 'Slower': '0.396'}
+Fitness: (0.15559961016054516,)
+                 0           1           2           3           4
+reward    0.000000    0.064810    0.210187    0.287727    0.215275
+p_sim     0.322132    0.396384    0.355356    0.365412    0.333284
+f_sim   400.000000  443.628016  601.849322  781.891827  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+41 	300   	0.212669	0.144945 	0.00673454	0.119178 	0.1556   
+42 	300   	0.212669	0.146085 	0.00605546	0.119178 	0.1556   
+43 	300   	0.212669	0.147096 	0.0053659 	0.119178 	0.1556   
+44 	300   	0.251029	0.147745 	0.00500798	0.119178 	0.161247 
+45 	300   	0.251029	0.148378 	0.00426671	0.125724 	0.161247 
+46 	300   	0.251029	0.148888 	0.00417232	0.125724 	0.161247 
+47 	300   	0.251029	0.149271 	0.00405085	0.125724 	0.161247 
+48 	300   	0.251029	0.149592 	0.00405595	0.125724 	0.161247 
+49 	300   	0.212669	0.150186 	0.00379491	0.133607 	0.16216  
+50 	300   	0.212669	0.150483 	0.00377418	0.133607 	0.16216  
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.124)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vx',True) < -0.163)):
+                env.select_oblique('(0.101*px + 0.429*py + -0.7*vx + -0.641*vy)',' >  -0.62')
+                if (not (env.get_params('vy',True) < 0.236)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.459*px + 0.999*py + 0.21*vx + -0.809*vy)',' <  -0.418')
+                if (not (env.get_params('py',True) < 0.477)):
+                    env.select_oblique('(0.241*px + -0.95*py + -0.793*vx + 0.572*vy)',' <  -0.523')
+                    if ((env.get_params('py',True) > 0.662)):
+                        action='Right'
+                    else:
+                        action='Idle'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.459*vx + -0.27*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                env.select_oblique('(-0.583*px + 0.915*py + -0.526*vx + -0.955*vy)',' >  -0.693')
+                if (not (env.get_params('vy',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Left'
+                
+            else:
+                env.select_oblique('(-0.379*px + 0.618*py + -0.074*vx + -0.406*vy)',' >  -0.566')
+                if (not (env.get_params('py',False) < 0.026)):
+                    action='Right'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        env.select_oblique('(-0.676*px + 0.786*py + 0.763*vx + 0.407*vy)',' >  0.333')
+        if ((env.get_params('vx',True) > 0.084)):
+            action='Left'
+        else:
+            action='Left'
+        
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left    0.0   11.0  159.0  192.0   38.0 
+      Idle    0.0   35.0   95.0  181.0   89.0 
+     Right    0.0   10.0   98.0  226.0   66.0 
+    Faster    0.0   26.0   94.0  213.0   67.0 
+    Slower    0.0   13.0   79.0  145.0  163.0 
+F1-score: {'Left': '0.000', 'Idle': '0.141', 'Right': '0.212', 'Faster': '0.314', 'Slower': '0.396'}
+Fitness: (0.16215960824119008,)
+                 0           1           2           3           4
+reward    0.000000    0.064810    0.210187    0.287727    0.248075
+p_sim     0.325317    0.391270    0.358529    0.384986    0.372268
+f_sim   400.000000  443.628016  601.849322  781.891827  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+51 	300   	0.212669	0.150938 	0.00346638	0.134202 	0.16216  
+52 	300   	0.212669	0.151403 	0.00361379	0.134202 	0.16216  
+53 	300   	0.251237	0.151914 	0.00366257	0.136148 	0.162198 
+54 	300   	0.251237	0.152365 	0.00386216	0.136148 	0.162198 
+55 	300   	0.251237	0.152857 	0.00394498	0.141697 	0.162566 
+56 	300   	0.251029	0.153295 	0.00410627	0.141697 	0.162776 
+57 	300   	0.251029	0.153988 	0.00427182	0.144659 	0.162776 
+58 	300   	0.251029	0.154542 	0.00440016	0.144659 	0.162776 
+59 	300   	0.256236	0.155279 	0.0044212 	0.145536 	0.163364 
+60 	300   	0.256236	0.156025 	0.00447613	0.14745  	0.163364 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.82)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if (not (env.get_params('vy',True) < 0.0)):
+                env.select_oblique('(0.89*px + 0.907*py + -0.114*vx + -0.641*vy)',' <  -0.62')
+                if ((env.get_params('px',True) < 0.974)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(0.821*px + 0.999*py + -0.646*vx + 0.508*vy)',' <  0.584')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(0.5*px + -0.83*py + -0.699*vx + -0.559*vy)',' >  0.989')
+                    if (not (env.get_params('vx',True) > 0.357)):
+                        action='Idle'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            if ((env.get_params('py',False) > -0.661)):
+                action='Slower'
+            else:
+                action='Slower'
+            
+        
+    else:
+        action='Slower'
+    
+else:
+    action='Left'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left   74.0  159.0    0.0  129.0   38.0 
+      Idle   43.0  175.0    0.0   93.0   89.0 
+     Right   24.0  251.0    0.0   59.0   66.0 
+    Faster   27.0  141.0    0.0  165.0   67.0 
+    Slower   19.0  136.0    0.0   82.0  163.0 
+F1-score: {'Left': '0.252', 'Idle': '0.277', 'Right': '0.000', 'Faster': '0.356', 'Slower': '0.396'}
+Fitness: (0.1633639087299453,)
+                 0           1           2           3           4
+reward    0.104329    0.237560    0.000000    0.259656    0.215275
+p_sim     0.370232    0.354100    0.292177    0.396578    0.352972
+f_sim   457.247380  783.553793  400.000000  591.285174  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+61 	300   	0.256236	0.156587 	0.0044778 	0.14745  	0.163364 
+62 	300   	0.251535	0.157116 	0.0045142 	0.14745  	0.16757  
+63 	300   	0.251535	0.157733 	0.00443152	0.14745  	0.16757  
+64 	300   	0.251535	0.158316 	0.00426952	0.14745  	0.16757  
+65 	300   	0.251535	0.158884 	0.00410347	0.14745  	0.16757  
+66 	300   	0.251535	0.159375 	0.00393505	0.14745  	0.16757  
+67 	300   	0.251535	0.159836 	0.00369345	0.14745  	0.16757  
+68 	300   	0.251535	0.160179 	0.00350627	0.147488 	0.16757  
+69 	300   	0.251535	0.160525 	0.00343371	0.147488 	0.16757  
+70 	300   	0.269206	0.161032 	0.00318776	0.147488 	0.169712 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.429*py + -0.7*vx + -0.641*vy)',' <  -0.62')
+                if ((env.get_params('px',True) < -0.891)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.597*px + 0.999*py + -0.646*vx + 0.924*vy)',' <  0.584')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.782*px + -0.83*py + -0.793*vx + 0.69*vy)',' >  0.989')
+                    if (not (env.get_params('vx',True) > -0.203)):
+                        action='Idle'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            if (not (env.get_params('py',False) > -0.065)):
+                action='Left'
+            else:
+                action='Slower'
+            
+        
+    else:
+        action='Left'
+    
+else:
+    action='Faster'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.16971189890707225,)
+                 0           1           2           3           4
+reward    0.154083    0.210098    0.000000    0.269103    0.215275
+p_sim     0.370794    0.355219    0.293187    0.396772    0.353123
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+71 	300   	0.269206	0.161367 	0.00309386	0.147488 	0.169712 
+72 	300   	0.269206	0.161635 	0.00300878	0.147488 	0.169712 
+73 	300   	0.269206	0.161945 	0.00288475	0.147488 	0.169712 
+74 	300   	0.269206	0.162283 	0.00274644	0.147488 	0.171772 
+75 	300   	0.269206	0.162558 	0.00259549	0.149178 	0.171772 
+76 	300   	0.269206	0.162771 	0.0024903 	0.149178 	0.171772 
+77 	300   	0.269206	0.163016 	0.00240428	0.149178 	0.171772 
+78 	300   	0.269206	0.163242 	0.00222589	0.151439 	0.171772 
+79 	300   	0.269206	0.163511 	0.00240628	0.151439 	0.171772 
+80 	300   	0.269206	0.163902 	0.0023764 	0.15459  	0.172697 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.429*py + -0.225*vx + -0.641*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.597*px + 0.999*py + -0.962*vx + 0.924*vy)',' <  -0.039')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.297*px + -0.83*py + -0.793*vx + 0.69*vy)',' >  0.989')
+                    if (not (env.get_params('vx',True) > -0.203)):
+                        action='Idle'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            if (not (env.get_params('py',False) > -0.631)):
+                action='Slower'
+            else:
+                action='Slower'
+            
+        
+    else:
+        action='Idle'
+    
+else:
+    action='Right'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.1726972601902593,)
+                 0           1           2           3           4
+reward    0.154083    0.225025    0.000000    0.269103    0.215275
+p_sim     0.376972    0.357280    0.309027    0.400160    0.351285
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+81 	300   	0.269206	0.164137 	0.00237874	0.15459  	0.172697 
+82 	300   	0.269206	0.164513 	0.00252969	0.15459  	0.172697 
+83 	300   	0.269206	0.164778 	0.00261854	0.15459  	0.172697 
+84 	300   	0.269206	0.165219 	0.00283727	0.15459  	0.176597 
+85 	300   	0.269206	0.165596 	0.00287444	0.158661 	0.176597 
+86 	300   	0.266236	0.165999 	0.00310033	0.158661 	0.178626 
+87 	300   	0.266236	0.166399 	0.0031955 	0.158661 	0.178626 
+88 	300   	0.266236	0.166865 	0.00334121	0.158661 	0.178626 
+89 	300   	0.266236	0.167397 	0.00343523	0.158913 	0.178626 
+90 	300   	0.266236	0.167985 	0.00349112	0.158913 	0.178626 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + -0.029*py + -0.225*vx + -0.641*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.597*px + -0.939*py + 0.462*vx + 0.508*vy)',' <  0.584')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.782*px + -0.83*py + -0.793*vx + 0.505*vy)',' <  -0.584')
+                    if (not (env.get_params('vx',True) > 0.357)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.459*vx + -0.178*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                if (not (env.get_params('vy',True) < -0.745)):
+                    action='Left'
+                else:
+                    action='Idle'
+                
+            else:
+                action='Slower'
+            
+        
+    else:
+        action='Right'
+    
+else:
+    action='Left'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  106.0  110.0    0.0  136.0   48.0 
+      Idle   55.0  151.0    0.0  104.0   90.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   54.0  100.0    0.0  169.0   77.0 
+    Slower   25.0  116.0    0.0   90.0  169.0 
+F1-score: {'Left': '0.312', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.398'}
+Fitness: (0.1786264556417471,)
+                 0           1           2           3           4
+reward    0.145131    0.244523    0.000000    0.269103    0.234375
+p_sim     0.374173    0.358101    0.312004    0.424781    0.381209
+f_sim   481.302392  697.634355  400.000000  622.297330  580.952028
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+91 	300   	0.266236	0.168435 	0.00353137	0.158913 	0.178626 
+92 	300   	0.266236	0.169042 	0.00351972	0.158913 	0.179304 
+93 	300   	0.266236	0.169562 	0.00347876	0.158913 	0.179304 
+94 	300   	0.266236	0.170119 	0.00326502	0.161422 	0.179304 
+95 	300   	0.266236	0.170495 	0.00316746	0.161422 	0.179304 
+96 	300   	0.266236	0.170799 	0.00303831	0.161422 	0.179304 
+97 	300   	0.266236	0.171145 	0.00295907	0.161422 	0.179304 
+98 	300   	0.266236	0.171501 	0.00299588	0.161422 	0.179304 
+99 	300   	0.266236	0.171924 	0.00303574	0.161422 	0.179304 
+100	300   	0.266236	0.172221 	0.00299761	0.161422 	0.179304 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + -0.029*py + -0.225*vx + 0.756*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.597*px + -0.939*py + 0.462*vx + -0.941*vy)',' <  0.584')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.782*px + -0.83*py + -0.793*vx + 0.505*vy)',' <  0.888')
+                    if (not (env.get_params('vx',True) > 0.357)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.459*vx + -0.178*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                if (not (env.get_params('px',True) < -0.745)):
+                    action='Left'
+                else:
+                    action='Idle'
+                
+            else:
+                action='Slower'
+            
+        
+    else:
+        action='Right'
+    
+else:
+    if ((env.get_params('vy',False) < 0.618)):
+        action='Idle'
+    else:
+        action='Slower'
+    
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  106.0  110.0    0.0  136.0   48.0 
+      Idle   55.0  151.0    0.0  104.0   90.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   54.0  100.0    0.0  169.0   77.0 
+    Slower   25.0  116.0    0.0   90.0  169.0 
+F1-score: {'Left': '0.312', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.398'}
+Fitness: (0.17930412074881247,)
+                 0           1           2           3           4
+reward    0.145131    0.247912    0.000000    0.269103    0.234375
+p_sim     0.374173    0.360537    0.312201    0.428693    0.381015
+f_sim   481.302392  697.634355  400.000000  622.297330  580.952028
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+101	300   	0.266236	0.172591 	0.0028677 	0.161422 	0.179304 
+102	300   	0.266236	0.172869 	0.00287248	0.161422 	0.179304 
+103	300   	0.266236	0.173152 	0.0028232 	0.162624 	0.180261 
+104	300   	0.266236	0.173426 	0.00279429	0.162624 	0.180261 
+105	300   	0.266236	0.173666 	0.002757  	0.162624 	0.181837 
+106	300   	0.266236	0.173907 	0.00279143	0.162624 	0.181837 
+107	300   	0.266236	0.174092 	0.00274571	0.162624 	0.181837 
+108	300   	0.266236	0.174323 	0.00275211	0.162624 	0.181837 
+109	300   	0.266236	0.174559 	0.00263488	0.162624 	0.181837 
+110	300   	0.266236	0.174822 	0.00265393	0.162624 	0.181837 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + -0.029*py + -0.225*vx + 0.756*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.597*px + -0.939*py + 0.462*vx + -0.941*vy)',' <  -0.021')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.876*px + -0.83*py + -0.793*vx + 0.505*vy)',' <  0.138')
+                    if (not (env.get_params('vx',True) > 0.357)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.459*vx + -0.178*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                env.select_oblique('(-0.583*px + 0.915*py + -0.526*vx + -0.658*vy)',' >  0.46')
+                if ((env.get_params('px',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.113*vx + 0.95*vy)',' >  -0.487')
+                if (not (env.get_params('py',False) < 0.026)):
+                    action='Faster'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        action='Left'
+    
+else:
+    action='Slower'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  106.0  110.0    0.0  136.0   48.0 
+      Idle   55.0  151.0    0.0  104.0   90.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   54.0  100.0    0.0  169.0   77.0 
+    Slower   25.0  116.0    0.0   90.0  169.0 
+F1-score: {'Left': '0.312', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.398'}
+Fitness: (0.1818368862213296,)
+                 0           1           2           3           4
+reward    0.145131    0.247912    0.000000    0.269103    0.247039
+p_sim     0.373991    0.364960    0.319937    0.434374    0.385087
+f_sim   481.302392  697.634355  400.000000  622.297330  580.952028
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+111	300   	0.269206	0.175026 	0.00269053	0.162624 	0.182663 
+112	300   	0.269206	0.175232 	0.00265118	0.164596 	0.182663 
+113	300   	0.269206	0.175538 	0.00251998	0.166994 	0.182663 
+114	300   	0.269206	0.175755 	0.00249803	0.166994 	0.182663 
+115	300   	0.269206	0.175885 	0.00248364	0.166994 	0.182663 
+116	300   	0.269206	0.176022 	0.00253512	0.166994 	0.182663 
+117	300   	0.269206	0.176339 	0.00248956	0.166994 	0.182681 
+118	300   	0.269206	0.176719 	0.00251483	0.166994 	0.182681 
+119	300   	0.269206	0.176952 	0.00248475	0.166994 	0.182681 
+120	300   	0.269206	0.177165 	0.00249342	0.166994 	0.182681 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + -0.029*py + -0.225*vx + 0.756*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.597*px + -0.939*py + 0.462*vx + -0.941*vy)',' <  -0.323')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.782*px + -0.83*py + -0.311*vx + 0.505*vy)',' <  0.888')
+                    if (not (env.get_params('vx',True) > 0.357)):
+                        action='Left'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.459*vx + -0.178*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                env.select_oblique('(-0.583*px + 0.639*py + -0.526*vx + -0.658*vy)',' >  0.57')
+                if ((env.get_params('px',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.111*vx + -0.451*vy)',' >  -0.487')
+                if (not (env.get_params('py',False) < 0.026)):
+                    action='Slower'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        env.select_oblique('(0.612*px + 0.786*py + 0.763*vx + -0.206*vy)',' >  -0.82')
+        if ((env.get_params('vx',False) > 0.084)):
+            action='Faster'
+        else:
+            action='Right'
+        
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.18268077912920527,)
+                 0           1           2           3           4
+reward    0.154083    0.247912    0.000000    0.269103    0.242306
+p_sim     0.373955    0.365203    0.319937    0.434277    0.385121
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+121	300   	0.269206	0.177343 	0.00250419	0.166994 	0.183649 
+122	300   	0.269206	0.177616 	0.00252091	0.166994 	0.183649 
+123	300   	0.269206	0.177784 	0.00255201	0.166994 	0.183649 
+124	300   	0.269206	0.178033 	0.00252463	0.166994 	0.183649 
+125	300   	0.269206	0.178171 	0.00253296	0.166994 	0.183649 
+126	300   	0.269206	0.178385 	0.00250635	0.166994 	0.183649 
+127	300   	0.269206	0.178648 	0.00257571	0.166994 	0.184327 
+128	300   	0.269206	0.178788 	0.00258487	0.166994 	0.184327 
+129	300   	0.269206	0.178988 	0.00259794	0.166994 	0.184327 
+130	300   	0.269206	0.179091 	0.00259765	0.166994 	0.184327 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + -0.029*py + -0.225*vx + 0.756*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Slower'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.597*px + -0.939*py + 0.462*vx + -0.941*vy)',' <  0.584')
+                if ((env.get_params('py',True) > 0.431)):
+                    env.select_oblique('(-0.782*px + -0.83*py + -0.793*vx + 0.505*vy)',' <  -0.318')
+                    if (not (env.get_params('vx',True) > -0.161)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.194*vx + -0.178*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                env.select_oblique('(-0.583*px + 0.915*py + -0.526*vx + -0.658*vy)',' >  0.57')
+                if (not (env.get_params('px',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.111*vx + -0.406*vy)',' <  -0.487')
+                if (not (env.get_params('py',False) < 0.026)):
+                    action='Left'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        action='Slower'
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.18432665964652237,)
+                 0           1           2           3           4
+reward    0.154083    0.247912    0.000000    0.269103    0.250536
+p_sim     0.376765    0.365610    0.324286    0.434252    0.391537
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+131	300   	0.269206	0.179226 	0.00257771	0.166994 	0.184327 
+132	300   	0.269206	0.179413 	0.0025693 	0.166994 	0.184327 
+133	300   	0.269206	0.17967  	0.00248105	0.169712 	0.184358 
+134	300   	0.269206	0.179801 	0.00246791	0.169712 	0.184358 
+135	300   	0.269206	0.179895 	0.00247665	0.169712 	0.184358 
+136	300   	0.269206	0.180134 	0.00241255	0.169712 	0.184358 
+137	300   	0.269206	0.180339 	0.00237538	0.171666 	0.184358 
+138	300   	0.269206	0.180486 	0.0023712 	0.171666 	0.184358 
+139	300   	0.269206	0.180664 	0.00227847	0.171666 	0.184358 
+140	300   	0.269206	0.180852 	0.00227792	0.171666 	0.184358 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + -0.029*py + 0.335*vx + 0.756*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Faster'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.591*px + -0.279*py + 0.22*vx + -0.107*vy)',' >  0.584')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.782*px + -0.83*py + 0.72*vx + 0.69*vy)',' <  -0.584')
+                    if (not (env.get_params('vx',True) > -0.684)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.491*vx + -0.178*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                env.select_oblique('(0.702*px + 0.915*py + -0.526*vx + -0.658*vy)',' >  -0.693')
+                if ((env.get_params('px',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.111*vx + -0.406*vy)',' >  -0.487')
+                if (not (env.get_params('vy',False) < 0.026)):
+                    action='Left'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        env.select_oblique('(0.808*px + 0.786*py + 0.763*vx + -0.206*vy)',' >  -0.82')
+        if ((env.get_params('vx',False) > 0.084)):
+            action='Faster'
+        else:
+            action='Idle'
+        
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.18435836678273068,)
+                 0           1           2           3           4
+reward    0.154083    0.252260    0.000000    0.269103    0.246346
+p_sim     0.381522    0.363893    0.314122    0.436286    0.402368
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+141	300   	0.269206	0.181173 	0.00224789	0.171666 	0.186732 
+142	300   	0.269206	0.181401 	0.00219751	0.171666 	0.186732 
+143	300   	0.269206	0.181529 	0.00215401	0.172007 	0.186732 
+144	300   	0.269206	0.181652 	0.0021492 	0.172007 	0.186732 
+145	300   	0.269206	0.181793 	0.00213683	0.172007 	0.186732 
+146	300   	0.269206	0.181933 	0.00209794	0.173802 	0.186828 
+147	300   	0.269206	0.18214  	0.00203558	0.173802 	0.186828 
+148	300   	0.269206	0.182271 	0.0020116 	0.173802 	0.186828 
+149	300   	0.269206	0.182496 	0.00196749	0.1742   	0.186828 
+150	300   	0.269206	0.182673 	0.00196175	0.1742   	0.186828 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.597*px + -0.939*py + 0.462*vx + -0.941*vy)',' <  0.955')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.22*px + -0.42*py + -0.793*vx + 0.505*vy)',' <  -0.318')
+                    if (not (env.get_params('vx',True) > -0.603)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.715*vx + -0.178*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                env.select_oblique('(-0.041*px + 0.915*py + -0.526*vx + -0.91*vy)',' <  -0.693')
+                if ((env.get_params('vx',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.979*py + 0.111*vx + -0.406*vy)',' <  -0.487')
+                if (not (env.get_params('vy',False) < 0.026)):
+                    action='Left'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        env.select_oblique('(-0.337*px + 0.716*py + 0.564*vx + 0.556*vy)',' >  -0.871')
+        if ((env.get_params('vx',False) > 0.084)):
+            action='Faster'
+        else:
+            action='Idle'
+        
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.18682810141056755,)
+                 0           1           2           3           4
+reward    0.154083    0.263470    0.000000    0.269103    0.247484
+p_sim     0.388740    0.367677    0.325596    0.439320    0.397310
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+151	300   	0.269206	0.182795 	0.00190576	0.1742   	0.186828 
+152	300   	0.269206	0.182971 	0.00188981	0.176318 	0.186906 
+153	300   	0.269206	0.183031 	0.00184411	0.176597 	0.186906 
+154	300   	0.269206	0.183143 	0.00181477	0.176597 	0.186906 
+155	300   	0.269206	0.183316 	0.00176657	0.176597 	0.186906 
+156	300   	0.269206	0.183412 	0.0017558 	0.176597 	0.187287 
+157	300   	0.269206	0.18359  	0.00176638	0.176597 	0.189209 
+158	300   	0.269206	0.183665 	0.00174687	0.176597 	0.189209 
+159	300   	0.269206	0.183751 	0.00176584	0.176597 	0.189209 
+160	300   	0.269206	0.183799 	0.00175996	0.176597 	0.189209 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + -0.939*py + 0.462*vx + -0.941*vy)',' <  0.955')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(0.498*px + -0.42*py + -0.793*vx + -0.154*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.715*vx + -0.178*vy)',' <  0.977')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(0.595*px + 0.915*py + -0.526*vx + -0.91*vy)',' <  -0.693')
+                if ((env.get_params('vx',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.741*px + 0.777*py + 0.111*vx + -0.263*vy)',' <  -0.518')
+                if (not (env.get_params('py',False) < 0.026)):
+                    action='Right'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        env.select_oblique('(-0.333*px + 0.786*py + 0.533*vx + -0.83*vy)',' >  0.112')
+        if ((env.get_params('px',False) > 0.333)):
+            action='Slower'
+        else:
+            action='Right'
+        
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.18920871701647882,)
+                 0           1           2           3           4
+reward    0.165703    0.263470    0.000000    0.269103    0.247767
+p_sim     0.398162    0.373966    0.328957    0.445094    0.397433
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+161	300   	0.269206	0.183865 	0.00175642	0.176597 	0.189209 
+162	300   	0.269206	0.183978 	0.00167486	0.176597 	0.189209 
+163	300   	0.269206	0.184085 	0.00171465	0.176597 	0.189209 
+164	300   	0.269206	0.184227 	0.00169906	0.176597 	0.189209 
+165	300   	0.269206	0.184311 	0.00177225	0.176597 	0.189856 
+166	300   	0.269206	0.184454 	0.00178771	0.176597 	0.189856 
+167	300   	0.269206	0.184565 	0.00184478	0.176597 	0.189992 
+168	300   	0.269206	0.184708 	0.00179132	0.176597 	0.189992 
+169	300   	0.269206	0.184881 	0.00180042	0.176597 	0.190034 
+170	300   	0.269206	0.185001 	0.00181417	0.176597 	0.190034 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + 0.613*py + 0.462*vx + -0.941*vy)',' <  0.955')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(0.498*px + -0.42*py + -0.793*vx + -0.154*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.715*vx + -0.178*vy)',' <  0.977')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(0.595*px + 0.915*py + -0.526*vx + -0.91*vy)',' <  -0.693')
+                if (not (env.get_params('px',False) < 0.391)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.111*vx + -0.716*vy)',' <  -0.487')
+                if (not (env.get_params('py',False) < 0.026)):
+                    action='Left'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        if ((env.get_params('px',False) < -0.373)):
+            if (not (env.get_params('vy',True) > -0.283)):
+                action='Right'
+            else:
+                action='Idle'
+            
+        else:
+            action='Left'
+        
+    
+else:
+    env.select_oblique('(0.537*px + 0.718*py + 0.786*vx + -0.492*vy)',' >  -0.714')
+    if (not (env.get_params('px',False) > -0.783)):
+        action='Left'
+    else:
+        action='Faster'
+    
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.19003394435058335,)
+                 0           1           2           3           4
+reward    0.167061    0.263470    0.000000    0.269103    0.250536
+p_sim     0.392922    0.370276    0.332609    0.439810    0.401352
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+171	300   	0.269206	0.18519  	0.00173032	0.178626 	0.190034 
+172	300   	0.269206	0.185325 	0.00175627	0.178626 	0.190034 
+173	300   	0.269206	0.185459 	0.00179061	0.178626 	0.190034 
+174	300   	0.269206	0.185632 	0.0018117 	0.178626 	0.190034 
+175	300   	0.269206	0.185785 	0.00176527	0.180523 	0.190034 
+176	300   	0.269206	0.185945 	0.00175766	0.181906 	0.190034 
+177	300   	0.269206	0.186063 	0.00176413	0.182236 	0.190034 
+178	300   	0.269206	0.186225 	0.00180036	0.182236 	0.190034 
+179	300   	0.269206	0.186343 	0.0018297 	0.182236 	0.190034 
+180	300   	0.269206	0.186507 	0.00185812	0.182236 	0.190034 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + 0.613*py + 0.462*vx + -0.941*vy)',' <  0.955')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(0.498*px + -0.42*py + -0.793*vx + -0.154*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.715*vx + -0.178*vy)',' <  0.977')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(0.595*px + 0.915*py + -0.526*vx + -0.91*vy)',' <  -0.693')
+                if (not (env.get_params('px',False) < 0.391)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.111*vx + -0.716*vy)',' <  -0.487')
+                if (not (env.get_params('py',False) < 0.026)):
+                    action='Left'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        if ((env.get_params('px',False) < -0.373)):
+            if (not (env.get_params('vy',True) > -0.283)):
+                action='Right'
+            else:
+                action='Idle'
+            
+        else:
+            action='Left'
+        
+    
+else:
+    env.select_oblique('(0.537*px + 0.718*py + 0.786*vx + -0.492*vy)',' >  -0.714')
+    if (not (env.get_params('px',False) > -0.783)):
+        action='Left'
+    else:
+        action='Faster'
+    
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.19003394435058335,)
+                 0           1           2           3           4
+reward    0.167061    0.263470    0.000000    0.269103    0.250536
+p_sim     0.392922    0.370276    0.332609    0.439810    0.401352
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+181	300   	0.269206	0.186602 	0.00189354	0.182236 	0.190034 
+182	300   	0.269206	0.186767 	0.00192469	0.182236 	0.190034 
+183	300   	0.269206	0.186919 	0.00192512	0.182236 	0.190034 
+184	300   	0.269206	0.187021 	0.00193856	0.182236 	0.190034 
+185	300   	0.269206	0.187127 	0.00197349	0.182236 	0.191939 
+186	300   	0.269206	0.187291 	0.00198213	0.182236 	0.192815 
+187	300   	0.269206	0.187362 	0.00199106	0.182236 	0.192837 
+188	300   	0.269206	0.187513 	0.00204342	0.182236 	0.192837 
+189	300   	0.269206	0.187701 	0.00209055	0.182341 	0.193571 
+190	300   	0.269206	0.187771 	0.00213229	0.182341 	0.193571 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.369)):
+        if (not (env.get_params('vx',True) < 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + -0.939*py + 0.462*vx + -0.941*vy)',' <  -0.131')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.856*px + 0.563*py + -0.793*vx + 0.505*vy)',' >  0.351')
+                    if (not (env.get_params('vx',True) > -0.801)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.158*vx + 0.942*vy)',' <  0.96')
+            if (not (env.get_params('px',False) > -0.045)):
+                env.select_oblique('(-0.583*px + 0.639*py + -0.526*vx + -0.658*vy)',' <  0.57')
+                if (not (env.get_params('px',False) < -0.683)):
+                    action='Idle'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.111*vx + 0.954*vy)',' >  -0.487')
+                if (not (env.get_params('px',False) < 0.774)):
+                    action='Slower'
+                else:
+                    if (not (env.get_params('vy',True) < 0.763)):
+                        if ((env.get_params('vx',True) > 0.084)):
+                            action='Faster'
+                        else:
+                            action='Left'
+                        
+                    else:
+                        action='Slower'
+                    
+                
+            
+        
+    else:
+        env.select_oblique('(-0.723*px + 0.295*py + -0.549*vx + 0.718*vy)',' >  0.488')
+        if ((env.get_params('py',False) < -0.412)):
+            action='Faster'
+        else:
+            action='Right'
+        
+    
+else:
+    action='Left'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0    0.0  136.0   38.0 
+      Idle   56.0  151.0    0.0  104.0   89.0 
+     Right   40.0  211.0    0.0   83.0   66.0 
+    Faster   64.0  100.0    0.0  169.0   67.0 
+    Slower   31.0  116.0    0.0   90.0  163.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.000', 'Faster': '0.344', 'Slower': '0.396'}
+Fitness: (0.19357131151197512,)
+                 0           1           2           3           4
+reward    0.154083    0.263470    0.000000    0.269103    0.281200
+p_sim     0.391892    0.376270    0.348035    0.453168    0.405824
+f_sim   487.296732  697.634355  400.000000  622.297330  571.686372
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+191	300   	0.269206	0.187832 	0.00213842	0.182341 	0.193571 
+192	300   	0.269206	0.187923 	0.00210275	0.182341 	0.193571 
+193	300   	0.269206	0.188107 	0.00210169	0.182341 	0.193571 
+194	300   	0.266656	0.188224 	0.00211176	0.182341 	0.194237 
+195	300   	0.266656	0.188348 	0.00211173	0.182341 	0.194237 
+196	300   	0.266656	0.188473 	0.00211076	0.182341 	0.194237 
+197	300   	0.266656	0.18858  	0.00213151	0.182341 	0.194237 
+198	300   	0.266656	0.188681 	0.00210213	0.182341 	0.194237 
+199	300   	0.266656	0.18882  	0.00207482	0.182663 	0.194237 
+200	300   	0.266656	0.188924 	0.00205776	0.182796 	0.194237 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.844*px + -0.005*py + 0.198*vx + -0.781*vy)',' <  0.285')
+                if ((env.get_params('px',False) < -0.891)):
+                    action='Left'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + -0.939*py + 0.462*vx + -0.941*vy)',' <  0.238')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(0.498*px + -0.42*py + -0.793*vx + -0.154*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.715*vx + -0.178*vy)',' <  0.977')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(0.595*px + 0.915*py + -0.526*vx + -0.91*vy)',' <  -0.693')
+                if ((env.get_params('vx',False) < -0.683)):
+                    action='Left'
+                else:
+                    action='Left'
+                
+            else:
+                env.select_oblique('(-0.741*px + 0.777*py + 0.111*vx + -0.263*vy)',' <  -0.518')
+                if (not (env.get_params('py',True) < 0.64)):
+                    action='Right'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        env.select_oblique('(-0.333*px + 0.786*py + 0.533*vx + -0.206*vy)',' >  -0.82')
+        if ((env.get_params('vx',False) > 0.084)):
+            action='Idle'
+        else:
+            action='Right'
+        
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  110.0   13.0  136.0   25.0 
+      Idle   56.0  151.0   29.0  104.0   60.0 
+     Right   40.0  211.0   37.0   83.0   29.0 
+    Faster   64.0  100.0   24.0  169.0   43.0 
+    Slower   31.0  116.0   81.0   90.0   82.0 
+F1-score: {'Left': '0.328', 'Idle': '0.278', 'Right': '0.127', 'Faster': '0.344', 'Slower': '0.257'}
+Fitness: (0.19423650017557426,)
+                 0           1           2           3           4
+reward    0.179097    0.257391    0.132401    0.269103    0.133191
+p_sim     0.400030    0.371902    0.322392    0.457574    0.396502
+f_sim   487.296732  697.634355  506.011069  622.297330  499.189584
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+201	300   	0.266656	0.188999 	0.00209152	0.182796 	0.194877 
+202	300   	0.266656	0.189055 	0.00208995	0.182796 	0.194877 
+203	300   	0.266656	0.18925  	0.00205366	0.182796 	0.194877 
+204	300   	0.266656	0.189425 	0.00200134	0.182796 	0.194877 
+205	300   	0.266656	0.189582 	0.00199533	0.182796 	0.194877 
+206	300   	0.269206	0.189676 	0.00196904	0.182796 	0.196013 
+207	300   	0.269206	0.189853 	0.00197821	0.183535 	0.196013 
+Exploration ratio: 0.05
+208	600   	0.264293	0.18134  	0.00208693	0.175117 	0.18692  
+209	300   	0.264293	0.181455 	0.00211533	0.175117 	0.18692  
+210	300   	0.264293	0.18159  	0.00217456	0.175117 	0.18692  
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + -0.11*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(0.88*px + 0.262*py + 0.462*vx + -0.941*vy)',' <  0.955')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(-0.872*px + -0.057*py + -0.793*vx + -0.154*vy)',' >  -0.223')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.459*vx + -0.178*vy)',' <  0.977')
+            if (not (env.get_params('px',False) > -0.045)):
+                env.select_oblique('(0.746*px + 0.639*py + -0.526*vx + -0.492*vy)',' >  0.57')
+                if (not (env.get_params('px',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Left'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + -0.009*vx + 0.954*vy)',' >  -0.487')
+                if (not (env.get_params('px',False) < -0.08)):
+                    action='Slower'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        action='Slower'
+    
+else:
+    action='Faster'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  114.0    0.0  130.0   40.0 
+      Idle   52.0  155.0    0.0   97.0   96.0 
+     Right   41.0  204.0    0.0   91.0   64.0 
+    Faster   62.0   93.0    0.0  171.0   74.0 
+    Slower   36.0  126.0    0.0   90.0  148.0 
+F1-score: {'Left': '0.328', 'Idle': '0.284', 'Right': '0.000', 'Faster': '0.349', 'Slower': '0.360'}
+Fitness: (0.18692029312365444,)
+                 0           1           2           3           4
+reward    0.174926    0.255280    0.000000    0.261294    0.243102
+p_sim     0.391609    0.356764    0.326274    0.458322    0.382700
+f_sim   489.742175  690.820240  400.000000  612.766162  576.697540
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+211	300   	0.264293	0.181693 	0.00214915	0.175117 	0.18692  
+212	300   	0.264293	0.181871 	0.00215083	0.175117 	0.18692  
+213	300   	0.264293	0.182081 	0.00219932	0.175117 	0.188428 
+214	300   	0.264293	0.182212 	0.00217664	0.175117 	0.188428 
+215	300   	0.264293	0.182351 	0.00220088	0.175117 	0.188738 
+216	300   	0.264293	0.182468 	0.00223227	0.175117 	0.189521 
+217	300   	0.264293	0.18257  	0.0022658 	0.175117 	0.189521 
+218	300   	0.264293	0.18269  	0.00228418	0.175117 	0.189521 
+219	300   	0.264293	0.182898 	0.00228154	0.175117 	0.189521 
+220	300   	0.264293	0.183141 	0.00229618	0.175117 	0.189521 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + 0.034*py + 0.462*vx + -0.941*vy)',' <  -0.131')
+                if ((env.get_params('py',True) > 0.434)):
+                    env.select_oblique('(0.498*px + -0.42*py + -0.793*vx + -0.362*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.949*vx + -0.178*vy)',' <  0.977')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(0.742*px + 0.915*py + -0.526*vx + -0.91*vy)',' >  -0.781')
+                if ((env.get_params('px',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.111*vx + -0.02*vy)',' >  -0.487')
+                if (not (env.get_params('px',False) < 0.698)):
+                    action='Slower'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        env.select_oblique('(0.612*px + 0.786*py + 0.763*vx + -0.206*vy)',' <  -0.43')
+        if ((env.get_params('py',False) < -0.351)):
+            action='Idle'
+        else:
+            action='Right'
+        
+    
+else:
+    action='Right'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  114.0    0.0  130.0   40.0 
+      Idle   52.0  155.0    0.0   97.0   96.0 
+     Right   41.0  204.0    0.0   91.0   64.0 
+    Faster   62.0   93.0    0.0  171.0   74.0 
+    Slower   36.0  126.0    0.0   90.0  148.0 
+F1-score: {'Left': '0.328', 'Idle': '0.284', 'Right': '0.000', 'Faster': '0.349', 'Slower': '0.360'}
+Fitness: (0.18952146826202373,)
+                 0           1           2           3           4
+reward    0.187653    0.256126    0.000000    0.261294    0.242535
+p_sim     0.400488    0.359350    0.327458    0.464957    0.385358
+f_sim   489.742175  690.820240  400.000000  612.766162  576.697540
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+221	300   	0.264293	0.183267 	0.00232122	0.175117 	0.189521 
+222	300   	0.264293	0.183315 	0.00226483	0.17583  	0.189521 
+223	300   	0.264293	0.183498 	0.00224965	0.17583  	0.189521 
+224	300   	0.264293	0.183652 	0.00226913	0.17583  	0.189521 
+225	300   	0.264293	0.183698 	0.00228395	0.17583  	0.189521 
+226	300   	0.264293	0.183825 	0.00224856	0.17583  	0.189521 
+227	300   	0.264293	0.183921 	0.00223287	0.17583  	0.189521 
+228	300   	0.264293	0.184091 	0.00217616	0.177102 	0.189521 
+229	300   	0.264293	0.184238 	0.00223372	0.177102 	0.19079  
+230	300   	0.264293	0.184375 	0.00226938	0.177102 	0.19079  
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + -0.537*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + 0.915*py + 0.462*vx + -0.863*vy)',' <  -0.131')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(0.498*px + -0.42*py + 0.333*vx + -0.154*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.949*vx + 0.821*vy)',' <  0.977')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(-0.583*px + -0.216*py + -0.526*vx + -0.658*vy)',' <  0.57')
+                if (not (env.get_params('px',False) < -0.683)):
+                    action='Idle'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.718*vx + 0.954*vy)',' >  -0.487')
+                if (not (env.get_params('px',False) < 0.774)):
+                    action='Faster'
+                else:
+                    if (not (env.get_params('vy',True) < 0.763)):
+                        if ((env.get_params('vx',True) > 0.084)):
+                            action='Faster'
+                        else:
+                            action='Left'
+                        
+                    else:
+                        action='Slower'
+                    
+                
+            
+        
+    else:
+        env.select_oblique('(-0.723*px + 0.295*py + -0.549*vx + 0.718*vy)',' >  0.488')
+        if ((env.get_params('py',False) < -0.412)):
+            action='Faster'
+        else:
+            action='Right'
+        
+    
+else:
+    action='Left'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  114.0    0.0  130.0   40.0 
+      Idle   52.0  155.0    0.0   97.0   96.0 
+     Right   41.0  204.0    0.0   91.0   64.0 
+    Faster   62.0   93.0    0.0  171.0   74.0 
+    Slower   36.0  126.0    0.0   90.0  148.0 
+F1-score: {'Left': '0.328', 'Idle': '0.284', 'Right': '0.000', 'Faster': '0.349', 'Slower': '0.360'}
+Fitness: (0.1907901198033694,)
+                 0           1           2           3           4
+reward    0.178656    0.254481    0.000000    0.261294    0.259520
+p_sim     0.392713    0.361199    0.340688    0.452415    0.399788
+f_sim   489.742175  690.820240  400.000000  612.766162  576.697540
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+231	300   	0.264293	0.184443 	0.00227885	0.177102 	0.19079  
+232	300   	0.264293	0.184518 	0.00228533	0.177102 	0.19079  
+233	300   	0.264293	0.184638 	0.0022771 	0.177102 	0.19079  
+234	300   	0.264293	0.184884 	0.00230619	0.178166 	0.191748 
+235	300   	0.264293	0.185025 	0.00232336	0.178166 	0.191748 
+236	300   	0.264293	0.185147 	0.00232259	0.178166 	0.191748 
+237	300   	0.264293	0.185325 	0.00237576	0.178166 	0.191748 
+238	300   	0.264293	0.185395 	0.00235764	0.178166 	0.191748 
+239	300   	0.264293	0.185534 	0.00234817	0.178166 	0.191748 
+240	300   	0.264293	0.185654 	0.00233767	0.179625 	0.191748 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.564)):
+        if ((env.get_params('vx',True) > 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + 0.915*py + 0.462*vx + -0.863*vy)',' <  -0.131')
+                if ((env.get_params('py',True) > 0.477)):
+                    env.select_oblique('(0.498*px + -0.42*py + 0.333*vx + -0.154*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.658)):
+                        action='Left'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.949*vx + -0.178*vy)',' <  0.977')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(0.742*px + -0.462*py + -0.526*vx + -0.91*vy)',' >  -0.781')
+                if ((env.get_params('px',False) < -0.683)):
+                    action='Right'
+                else:
+                    action='Slower'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + -0.009*vx + 0.954*vy)',' >  -0.487')
+                if (not (env.get_params('px',False) < -0.08)):
+                    env.select_oblique('(-0.769*px + -0.025*py + 0.847*vx + 0.609*vy)',' >  -0.379')
+                    if ((env.get_params('vx',True) < -0.462)):
+                        action='Idle'
+                    else:
+                        action='Slower'
+                    
+                else:
+                    action='Left'
+                
+            
+        
+    else:
+        action='Idle'
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  114.0    0.0  130.0   40.0 
+      Idle   52.0  155.0    0.0   97.0   96.0 
+     Right   41.0  204.0    0.0   91.0   64.0 
+    Faster   62.0   93.0    0.0  171.0   74.0 
+    Slower   36.0  126.0    0.0   90.0  148.0 
+F1-score: {'Left': '0.328', 'Idle': '0.284', 'Right': '0.000', 'Faster': '0.349', 'Slower': '0.360'}
+Fitness: (0.19174826990458946,)
+                 0           1          2           3           4
+reward    0.178656    0.256126    0.00000    0.261294    0.262666
+p_sim     0.394743    0.363761    0.34127    0.450340    0.401978
+f_sim   489.742175  690.820240  400.00000  612.766162  576.697540
+num     401.000000  401.000000  401.00000  401.000000  401.000000
+---------------------------------------------------------
+241	300   	0.264293	0.185859 	0.00234355	0.179625 	0.191748 
+242	300   	0.264293	0.186039 	0.00236973	0.179625 	0.191748 
+243	300   	0.264293	0.186138 	0.00236825	0.179625 	0.191748 
+244	300   	0.264293	0.186268 	0.00236731	0.179625 	0.191748 
+245	300   	0.264293	0.186374 	0.00232822	0.179625 	0.191748 
+246	300   	0.264293	0.186541 	0.00230926	0.179625 	0.191748 
+247	300   	0.264293	0.186648 	0.00233819	0.179625 	0.191748 
+248	300   	0.264293	0.18675  	0.00232465	0.180612 	0.191748 
+249	300   	0.264293	0.186895 	0.00232597	0.180612 	0.191748 
+250	300   	0.274127	0.187106 	0.00231432	0.180612 	0.191771 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.32)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.307)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + 0.034*py + 0.462*vx + -0.941*vy)',' <  -0.131')
+                if ((env.get_params('py',True) > 0.434)):
+                    env.select_oblique('(0.498*px + -0.42*py + 0.078*vx + -0.154*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + 0.459*vx + -0.017*vy)',' <  0.977')
+            if (not (env.get_params('px',False) < -0.717)):
+                env.select_oblique('(-0.693*px + 0.308*py + -0.526*vx + -0.489*vy)',' >  -0.956')
+                if ((env.get_params('px',True) < 0.875)):
+                    action='Right'
+                else:
+                    action='Slower'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + 0.049*vx + 0.954*vy)',' <  -0.487')
+                if (not (env.get_params('px',False) < 0.799)):
+                    action='Slower'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        action='Right'
+    
+else:
+    action='Faster'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  116.0  114.0    0.0  130.0   40.0 
+      Idle   52.0  155.0    0.0   97.0   96.0 
+     Right   41.0  204.0    5.0   91.0   59.0 
+    Faster   62.0   93.0   53.0  171.0   21.0 
+    Slower   36.0  126.0    0.0   90.0  148.0 
+F1-score: {'Left': '0.328', 'Idle': '0.284', 'Right': '0.022', 'Faster': '0.349', 'Slower': '0.387'}
+Fitness: (0.19177137947017833,)
+                 0           1           2           3           4
+reward    0.187653    0.256126    0.040838    0.261294    0.212946
+p_sim     0.400422    0.357542    0.320092    0.458272    0.375854
+f_sim   489.742175  690.820240  436.439938  612.766162  551.692416
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+251	300   	0.276236	0.187322 	0.00231055	0.180612 	0.192471 
+252	300   	0.276236	0.187443 	0.00229172	0.180612 	0.192471 
+253	300   	0.276236	0.187647 	0.0022784 	0.180612 	0.192471 
+254	300   	0.274847	0.187775 	0.0022972 	0.180612 	0.194275 
+255	300   	0.274847	0.187897 	0.00232589	0.180612 	0.194275 
+256	300   	0.274847	0.188061 	0.00230023	0.180612 	0.194275 
+257	300   	0.274847	0.188209 	0.00228969	0.180612 	0.194275 
+258	300   	0.274847	0.188282 	0.00228769	0.180612 	0.194275 
+259	300   	0.274847	0.18838  	0.00223626	0.180612 	0.194275 
+260	300   	0.274847	0.188495 	0.00224229	0.180612 	0.194275 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.338)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + 0.034*py + 0.462*vx + -0.941*vy)',' <  -0.131')
+                if ((env.get_params('py',True) > 0.434)):
+                    env.select_oblique('(0.498*px + -0.42*py + -0.496*vx + -0.362*vy)',' <  -0.318')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.375*px + -0.837*py + -0.949*vx + -0.178*vy)',' <  0.977')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(0.581*px + 0.915*py + -0.526*vx + -0.705*vy)',' >  -0.781')
+                if (not (env.get_params('px',True) < -0.683)):
+                    action='Right'
+                else:
+                    action='Faster'
+                
+            else:
+                env.select_oblique('(-0.859*px + -0.911*py + 0.111*vx + -0.263*vy)',' >  -0.518')
+                if (not (env.get_params('py',True) < 0.64)):
+                    action='Right'
+                else:
+                    action='Slower'
+                
+            
+        
+    else:
+        env.select_oblique('(-0.333*px + 0.786*py + -0.48*vx + -0.871*vy)',' <  -0.82')
+        if ((env.get_params('vx',True) > 0.084)):
+            action='Faster'
+        else:
+            action='Right'
+        
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  108.0  104.0   28.0  124.0   36.0 
+      Idle   52.0  151.0   43.0   95.0   59.0 
+     Right   41.0  190.0   37.0   79.0   53.0 
+    Faster   55.0   80.0   35.0  155.0   75.0 
+    Slower   30.0   98.0   97.0   61.0  114.0 
+F1-score: {'Left': '0.315', 'Idle': '0.295', 'Right': '0.116', 'Faster': '0.339', 'Slower': '0.309'}
+Fitness: (0.19427546686031563,)
+                 0           1           2           3           4
+reward    0.179841    0.245201    0.135723    0.247631    0.162981
+p_sim     0.391301    0.358222    0.330612    0.454547    0.360252
+f_sim   482.822030  664.218921  528.614326  598.240292  521.884003
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+261	300   	0.274847	0.188623 	0.00224033	0.180612 	0.194275 
+262	300   	0.274847	0.188742 	0.00223025	0.180612 	0.194275 
+263	300   	0.274847	0.188779 	0.00222168	0.180612 	0.194275 
+264	300   	0.274847	0.188839 	0.00224248	0.180612 	0.194275 
+265	300   	0.274847	0.188985 	0.00223598	0.181768 	0.194275 
+266	300   	0.274847	0.189145 	0.00223827	0.181768 	0.194275 
+267	300   	0.274847	0.189233 	0.0022279 	0.181768 	0.194275 
+268	300   	0.276236	0.189393 	0.00222329	0.182342 	0.194507 
+269	300   	0.276236	0.189485 	0.00220065	0.182342 	0.194507 
+270	300   	0.276236	0.189615 	0.00215863	0.182479 	0.194507 
+ ---------------- best tree ---------------- 
+env=env_tracker(obs, verbose=verbose)
+if (not (env.get_params('vx',False) > 0.66)):
+    if ((env.get_params('py',False) > -0.13)):
+        if (not (env.get_params('vx',True) < 0.338)):
+            if ((env.get_params('vy',True) > 0.0)):
+                env.select_oblique('(0.89*px + 0.015*py + 0.144*vx + 0.756*vy)',' <  0.285')
+                if (not (env.get_params('px',False) < -0.891)):
+                    action='Idle'
+                else:
+                    action='Idle'
+                
+            else:
+                env.select_oblique('(-0.327*px + 0.034*py + 0.462*vx + -0.941*vy)',' <  -0.131')
+                if ((env.get_params('py',True) > 0.434)):
+                    env.select_oblique('(0.498*px + -0.42*py + -0.793*vx + -0.362*vy)',' <  -0.949')
+                    if (not (env.get_params('px',False) > -0.849)):
+                        action='Slower'
+                    else:
+                        action='Left'
+                    
+                else:
+                    action='Faster'
+                
+            
+        else:
+            env.select_oblique('(-0.91*px + -0.837*py + 0.544*vx + -0.178*vy)',' <  0.636')
+            if ((env.get_params('px',False) < -0.045)):
+                env.select_oblique('(0.742*px + -0.462*py + -0.526*vx + -0.91*vy)',' >  -0.781')
+                if ((env.get_params('px',False) > -0.683)):
+                    action='Right'
+                else:
+                    action='Slower'
+                
+            else:
+                env.select_oblique('(-0.859*px + 0.777*py + -0.009*vx + 0.954*vy)',' >  -0.487')
+                if (not (env.get_params('px',False) < -0.08)):
+                    env.select_oblique('(-0.769*px + -0.025*py + 0.847*vx + 0.609*vy)',' >  -0.038')
+                    if ((env.get_params('vx',True) < -0.462)):
+                        action='Idle'
+                    else:
+                        action='Slower'
+                    
+                else:
+                    action='Left'
+                
+            
+        
+    else:
+        action='Idle'
+    
+else:
+    action='Idle'
+pre_action=True
+------------------ confusion matrix ---------------------
+      t/p    Left   Idle  Right Faster Slower 
+      Left  108.0  104.0    0.0  124.0   64.0 
+      Idle   52.0  151.0    0.0   95.0  102.0 
+     Right   41.0  190.0    0.0   79.0   90.0 
+    Faster   55.0   80.0    0.0  155.0  110.0 
+    Slower   30.0   98.0    0.0   61.0  211.0 
+F1-score: {'Left': '0.315', 'Idle': '0.295', 'Right': '0.000', 'Faster': '0.339', 'Slower': '0.432'}
+Fitness: (0.19450688613606842,)
+                 0           1           2           3           4
+reward    0.179841    0.245201    0.000000    0.247631    0.299861
+p_sim     0.397569    0.365260    0.361296    0.458757    0.368431
+f_sim   482.822030  664.218921  400.000000  598.240292  616.902269
+num     401.000000  401.000000  401.000000  401.000000  401.000000
+---------------------------------------------------------
+271	300   	0.288682	0.189715 	0.00219735	0.182479 	0.194868 
+272	300   	0.288682	0.189844 	0.00213971	0.182479 	0.194868 
+273	300   	0.288682	0.189887 	0.00215757	0.182479 	0.194868 
+274	300   	0.288682	0.189952 	0.00211418	0.182479 	0.194868 
+275	300   	0.288682	0.190066 	0.00209826	0.182479 	0.194868 
+276	300   	0.288682	0.190152 	0.00213587	0.182479 	0.194868 

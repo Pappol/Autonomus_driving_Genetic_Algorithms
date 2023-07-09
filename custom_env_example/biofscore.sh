@@ -1,0 +1,1 @@
+python finalfscore.py --eval_step 2500 --jobs 8 --seed 0 --lambda_ 400 --generations 10000 --genotype_len 250 --cxp 0.25 --mp 1 --mutation "function-tools.mutUniformInt#low-0#up-40000#indpb-0.05" | tee test.log
