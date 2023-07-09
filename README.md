@@ -72,10 +72,31 @@ Note: to correctly save the results, there must be a manually made directory cal
 ### NEAT
 
 In order to run the NEAT solution to the environment you can simply run the python file called neat_solver by running:
-''' 
-cd NEAT
-python neat_solver.py
-'''
-To build environment for dependecies refer to NEAT repo 
+    
+    cd NEAT
+    python neat_solver.py
+
+The script will run the NEAT algorithm for 100 generations and then it will evaluate the best genome on 100 different scenarios. 
+
+Different parameters can be set in order to better understand the performance of the algorithm. The parameters are the following:
+
+- --config_path (type: str, default: 'config_ex.txt'): Specifies the path of the config file. This file contains the configuration settings for the NEAT algorithm, such as population size, mutation rates, and other genetic parameters. You can provide your own config file or use the default one provided.
+
+- --generations (type: int, default: 100): Sets the number of generations for which the NEAT algorithm will evolve the population. Each generation represents one iteration of the genetic algorithm, where individuals are evaluated, selected, and evolved based on their fitness.
+
+- --save_path (type: str, default: 'gif/'): Specifies the path of the folder where the generated GIF files will be saved. During training, the script creates GIF files to visualize the agent's progress and performance over time. The GIF files will be saved in the specified folder.
+
+- --test (type: int, default: 100): Determines the number of test episodes to perform after the training is complete. After training, the trained agent will be tested in the environment for the specified number of episodes. The agent's performance during these test episodes will be evaluated and analyzed.
+
+- --n_training_env (type: int, default: 10): Sets the number of training environments to use during the training process. The highway environment can have multiple variations or scenarios, and using multiple training environments helps the agent generalize its learned behavior across different scenarios. The agent will be trained in each of the specified number of training environments.
+
+By adjusting these command-line arguments, you can customize the NEAT algorithm's behavior and training process according to your specific requirements.
+
+It will then show the results of the evaluation and save the best genome. The best performing tests are saved as gifs in the gif folder.
+
+If you want to replicate the evaluation process in order to choose the parameters run the run_tests.sh witch will run the neat solver multiple times with different parameters and save the outupts. This will plot into wandb all the results.
+
+To build environment for dependecies refer to NEAT repo [here](https://github.com/CodeReclaimers/neat-python)
+
 
 Link to Overleaf report [here](https://www.overleaf.com/6663124541sxbmqbgggpkw)
