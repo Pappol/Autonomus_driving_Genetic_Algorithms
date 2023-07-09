@@ -35,6 +35,8 @@ The default configuration runs for 4000 iterations, once complete it saves the a
 
 Once the agent has been trained, the best performing agent is taken and evaluated on 100 different scenarios. The training environments are not initialized by a seed and are thus random.
 
+Note: to correctly save the results, there must be a manually made directory called run.
+
 ### GA
 The GA folder contains the script for running a Genetic Algorithm. At the beginning of highway.py a dictionary lists the customizable parameters that were tried when testing the performance:
 
@@ -52,6 +54,8 @@ The GA folder contains the script for running a Genetic Algorithm. At the beginn
 
 Once complete the algorithm saves the best performing model learned during training in a pt file (which can be loaded) and outputs visual and text results of 100 environments.
 
+Note: to correctly save the results, there must be a manually made directory called run.
+
 ### CMA-ES
 The CMA-ES folder contains the script for running a Covariance Matrix Adaptation Evolution Strategy. At the beginning of highway.py a dictionary lists the customizable parameters that were tried when testing the performance:
 
@@ -62,5 +66,7 @@ The CMA-ES folder contains the script for running a Covariance Matrix Adaptation
 - "seed_mode": How the seed is defined through generations, can be "random" or "fixed" or "generation". Fixed means every individual in the evolution is evaluated in the same environment, Generation means a unique seed for all inviduals is used at each generation.
 - "hidden_layers_net": Number of hidden layers in the net, can be 1 or 2. Better results were found with 2
 - "num_generations": Number of generations 
+
+Note: to correctly save the results, there must be a manually made directory called run.
 
 Link to overleaf report [here](https://www.overleaf.com/6663124541sxbmqbgggpkw)
