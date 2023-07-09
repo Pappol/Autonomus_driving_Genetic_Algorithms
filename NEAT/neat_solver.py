@@ -87,43 +87,18 @@ def eval_genomes(genomes, config):
                 
             genome_fitness.append(cumulative_fitness)
 
-        genome.fitness = sum(genome_fitness) / n_training_env
+        genome.fitness = sum(genome_fitness) / len(genome_fitness)
         #wandb.log({"individual_fitness": genome.fitness}, commit=False)
         test_fitness.append(genome)
 
     #calculate mean and standard deviation of fitness
     mean_fitness = sum([x.fitness for x in test_fitness]) / len(test_fitness)
     std_fitness = np.std([x.fitness for x in test_fitness])
-    wandb.log({"mean_fitness": mean_fitness, "std_fitness": std_fitness})
+    best_fitness = max([x.fitness for x in test_fitness])
 
-    test_fitness.sort(reverse=True)
+    wandb.log({"mean_fitness": mean_fitness, "std_fitness": std_fitness, "best_fitness" : best_fitness})
 
-    if(test_fitness[0].fitness > 30):
-
-        for i in range(20):
-            observation = env.reset(seed = i)[0]
-            net = neat.nn.FeedForwardNetwork.create(test_fitness[0], config)
-            observation = convert_observation(observation)
-            sum_reward = 0
-            done = truncated = False
-            frames=[]
-
-            while (not done) and (not truncated):
-                state = torch.FloatTensor(observation)
-                state = state.to(device)
-                final_layer = net.activate(state)
-                action = np.argmax(final_layer)
-                observation_next, reward, done, truncated, info = env.step(action)
-                observation = convert_observation(observation_next)
-                sum_reward += reward
-                env.render()
-                frames.append(env.render())
-
-            print('fitness', sum_reward)
-            save_frames_as_gif(frames=frames, path = save_path, filename=str(i) + '_genome_' + str(test_fitness[0].key) + "_best_agent_visualized_TR_"+str(n_training_env)+".gif")
-            visualize.draw_net(config, test_fitness[0], view=False, filename= save_path + str(i) + '_genome_' + str(test_fitness[0].key) + "_winner-net_TR_"+str(n_training_env)+".gv")
-            visualize.draw_net(config, test_fitness[0], view=False, filename= save_path + str(i) + '_genome_' + str(test_fitness[0].key) + "_winner-net-pruned_TR_"+str(n_training_env)+".gv", prune_unused=True)
-
+    
 def main(args):
     config = neat.config.Config(DriverGenome, neat.DefaultReproduction,
                                 neat.DefaultSpeciesSet, neat.DefaultStagnation,
@@ -204,22 +179,21 @@ if __name__ == '__main__':
     env=gym.make("highway-fast-v0", render_mode = 'rgb_array')
 
     env.configure({'observation': 
-                {'type': 'TimeToCollision', 'horizon': 10}, 
-                    'action': {'type': 'DiscreteMetaAction'}, 
-                    "vehicles_count": 10,
-                    'duration': 40, 
-                    'lanes_count': 4, 
-                    'collision_reward': -1, 
-                    'high_speed_reward': 3, 
-                    'reward_speed_range': [10, 30], 
-                    'normalize_reward': False})
+                    {'type': 'TimeToCollision', 'horizon': 10}, 
+                        'action': {'type': 'DiscreteMetaAction'}, 
+                        'duration': 40, 
+                        'lanes_count': 4, 
+                        'collision_reward': -5, 
+                        'high_speed_reward': 1, 
+                        'reward_speed_range': [23, 30], 
+                        'normalize_reward': False})
 
     args = parser.parse_args()
     save_path = args.save_path
     n_training_env = args.n_training_env
 
     #set wandb name based on number of training environments
-    wandb.init(project="neat-testing", name="different-env-{}".format(n_training_env))
+    wandb.init(project="neat-best", name="env-{}".format(n_training_env))
 
     main(args)
  
