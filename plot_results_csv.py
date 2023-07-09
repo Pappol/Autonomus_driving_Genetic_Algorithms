@@ -60,10 +60,30 @@ def plot_neat():
     plt.legend()
     plt.show()
 
+def plot_neat_500():
+    api = wandb.Api()
+    run = api.run("/pappol/neat-solver/runs/80ebzqza")
+    df = run.history()
+
+    plt.plot(df["_step"], df["mean_fitness"], label="500 gen")
+    plt.xlabel("Generation")
+    plt.ylabel("Mean Fitness")
+
+    plt.grid(axis="y")
+    plt.legend()
+    plt.show()
+
+    plt.plot(df["_step"], df["std_fitness"], label="500 gen")
+    plt.xlabel("Generation")
+    plt.ylabel("Std Fitness")
+    
+    plt.grid(axis="y")
+    plt.legend()
+    plt.show()
 
 def main():
     parser = argparse.ArgumentParser(description="Plotting script for DQN, CMA-ES, and NEAT")
-    parser.add_argument("algorithm", choices=["dqn", "cma-es", "neat"], help="Choose which algorithm to plot")
+    parser.add_argument("algorithm", choices=["dqn", "cma-es", "neat", "neat_500"], help="Choose which algorithm to plot")
 
     args = parser.parse_args()
 
@@ -73,6 +93,8 @@ def main():
         plot_cma_es()
     elif args.algorithm == "neat":
         plot_neat()
+    elif args.algorithm == "neat_500":
+        plot_neat_500()
 
 if __name__ == "__main__":
     main()
