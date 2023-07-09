@@ -1,6 +1,6 @@
 # Bio_Inspired_Ai
 
-This repository contains the work done by Jacopo Donà, Giovanni Ambrosi, Riccardo Parola and Dung Van on the Highway environment for the Bio-Inspired AI course.
+This repository contains the work done by Jacopo Donà, Giovanni Ambrosi, Riccardo Parola, and Dung Van on the Highway environment for the Bio-Inspired AI course.
 
 It is subdivided into 4 different folders, each of which contains the script for training and solving the environment with different algorithms.
 
@@ -68,5 +68,14 @@ The CMA-ES folder contains the script for running a Covariance Matrix Adaptation
 - "num_generations": Number of generations 
 
 Note: to correctly save the results, there must be a manually made directory called run.
+
+### NEAT
+
+In order to run the NEAT solution to the environment you can simply run the python file called neat_solver by running:
+''' 
+cd NEAT
+python neat_solver.py
+'''
+To build environment for dependecies refer to NEAT repo 
 
 Link to Overleaf report [here](https://www.overleaf.com/6663124541sxbmqbgggpkw)
