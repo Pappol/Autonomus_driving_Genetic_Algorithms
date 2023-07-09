@@ -1,10 +1,5 @@
-.idea
 # Compiled sources
 *.pyc
-GA/highway_weights
-GA/wandb
-RL/wandb
-CMA-ES/wandb
 build/
 dist/
 
@@ -30,16 +25,3 @@ _build
 # Docs
 docs/_build
 **jupyter_execute
-
-
-
-<<<<<<< HEAD
-HighwayEnv
-wandb
-old
-gifs
-nohup*
-
-*.gv
-=======
->>>>>>> dungvd
