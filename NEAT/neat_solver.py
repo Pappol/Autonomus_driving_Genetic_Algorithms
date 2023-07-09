@@ -196,7 +196,7 @@ if __name__ == '__main__':
                         help='path of the folder where to save the gif')
     parser.add_argument('--test', type=int, default=100,
                         help='number of test to perform')
-    parser.add_argument('--n_training_env', type=int, default=3,
+    parser.add_argument('--n_training_env', type=int, default=10,
                         help='number of training environments')
     
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
@@ -204,14 +204,15 @@ if __name__ == '__main__':
     env=gym.make("highway-fast-v0", render_mode = 'rgb_array')
 
     env.configure({'observation': 
-                    {'type': 'TimeToCollision', 'horizon': 10}, 
-                        'action': {'type': 'DiscreteMetaAction'}, 
-                        'duration': 40, 
-                        'lanes_count': 4, 
-                        'collision_reward': -5, 
-                        'high_speed_reward': 1, 
-                        'reward_speed_range': [23, 30], 
-                        'normalize_reward': False})
+                {'type': 'TimeToCollision', 'horizon': 10}, 
+                    'action': {'type': 'DiscreteMetaAction'}, 
+                    "vehicles_count": 10,
+                    'duration': 40, 
+                    'lanes_count': 4, 
+                    'collision_reward': -1, 
+                    'high_speed_reward': 3, 
+                    'reward_speed_range': [10, 30], 
+                    'normalize_reward': False})
 
     args = parser.parse_args()
     save_path = args.save_path

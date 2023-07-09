@@ -37,3 +37,6 @@ HighwayEnv
 wandb
 old
 gifs
+nohup*
+
+*.gv
