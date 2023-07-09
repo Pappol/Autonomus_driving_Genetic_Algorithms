@@ -204,14 +204,15 @@ if __name__ == '__main__':
     env=gym.make("highway-fast-v0", render_mode = 'rgb_array')
 
     env.configure({'observation': 
-                    {'type': 'TimeToCollision', 'horizon': 10}, 
-                        'action': {'type': 'DiscreteMetaAction'}, 
-                        'duration': 40, 
-                        'lanes_count': 4, 
-                        'collision_reward': -5, 
-                        'high_speed_reward': 1, 
-                        'reward_speed_range': [23, 30], 
-                        'normalize_reward': False})
+                {'type': 'TimeToCollision', 'horizon': 10}, 
+                    'action': {'type': 'DiscreteMetaAction'}, 
+                    "vehicles_count": 10,
+                    'duration': 40, 
+                    'lanes_count': 4, 
+                    'collision_reward': -1, 
+                    'high_speed_reward': 3, 
+                    'reward_speed_range': [10, 30], 
+                    'normalize_reward': False})
 
     args = parser.parse_args()
     save_path = args.save_path
