@@ -3,8 +3,8 @@
 *.pyc
 GA/highway_weights
 GA/wandb
-RL/run
 RL/wandb
+CMA-ES/wandb
 build/
 dist/
 

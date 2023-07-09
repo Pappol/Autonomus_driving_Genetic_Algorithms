@@ -1,0 +1,7 @@
+Mean: 10.2498318669772
+Std: 9.10744307378691
+Top 10 mean 26.00889669245676
+
+random seed 1 evaluation 300 epochs 0 initialization
+
+https://wandb.ai/jacopodona/highway_CMA/runs/nnqio6qf/workspace?workspace=user-jacopodona
