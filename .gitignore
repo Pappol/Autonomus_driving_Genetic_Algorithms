@@ -38,3 +38,5 @@ wandb
 old
 gifs
 nohup*
+
+*.gv
