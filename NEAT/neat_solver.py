@@ -196,7 +196,7 @@ if __name__ == '__main__':
                         help='path of the folder where to save the gif')
     parser.add_argument('--test', type=int, default=100,
                         help='number of test to perform')
-    parser.add_argument('--n_training_env', type=int, default=3,
+    parser.add_argument('--n_training_env', type=int, default=10,
                         help='number of training environments')
     
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
