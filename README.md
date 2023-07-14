@@ -98,5 +98,3 @@ If you want to replicate the evaluation process in order to choose the parameter
 
 To build environment for dependecies refer to NEAT repo [here](https://github.com/CodeReclaimers/neat-python)
 
-
-Link to Overleaf report [here](https://www.overleaf.com/read/zdhhsqrbbspf)
